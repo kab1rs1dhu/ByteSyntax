@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
-import { User } from "lucide-react";
+import { User } from "../models/user.model.js";
 
 export const inngest = new Inngest({ name: "ByteSyntax" });
 
