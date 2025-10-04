@@ -3,8 +3,9 @@ import React from 'react'
 
 const HomePage = () => {
   return (
-    <div><UserButton/ > 
-    home page new
+    <div>
+      <UserButton />
+      home page new
     </div>
   )
 }
