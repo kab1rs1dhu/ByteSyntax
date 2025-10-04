@@ -219,6 +219,7 @@
 
   .auth-left {
     padding: 2rem 1.5rem;
+    order: 2; /* Content comes second on mobile */
   }
 
   .auth-hero {
@@ -228,6 +229,7 @@
   .auth-right {
     min-height: 40vh;
     padding: 1rem;
+    order: 1; /* Image comes first on mobile */
   }
 
   .auth-image-container {
