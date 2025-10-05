@@ -1,7 +1,7 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import { User } from "../models/user.model.js";
-import { upsertStreamUser } from "./stream.js";
+import { upsertStreamUser , addUserToPublicChannels} from "./stream.js";
 
 export const inngest = new Inngest({ id: "ByteSyntax" });
 
@@ -21,6 +21,8 @@ const syncUser = inngest.createFunction(
         await User.create(newUser);
 
         await upsertStreamUser({id: newUser.clerkId.toString(), name: newUser.name, image: newUser.image});
+
+        await addUserToPublicChannels(newUser.clerkId.toString());
 
     }
 );

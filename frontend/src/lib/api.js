@@ -1,7 +1,6 @@
-import { axiosInstance } from './axios';
+import { axiosInstance } from "./axios";
 
-export async function getScreenToken(){
+export async function getStreamToken() {
     const response = await axiosInstance.get("/chat/token");
     return response.data;
 }
-
