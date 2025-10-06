@@ -1,7 +1,7 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import { User } from "../models/user.model.js";
-import { upsertStreamUser , addUserToPublicChannels} from "./stream.js";
+import { upsertStreamUser , addUserToPublicChannels, deleteStreamUser} from "./stream.js";
 
 export const inngest = new Inngest({ id: "ByteSyntax" });
 
@@ -28,14 +28,15 @@ const syncUser = inngest.createFunction(
 );
 
 const deleteUserFromDB = inngest.createFunction(
-    {id : "delete-user-from-db"},
-    { event : "clerk/user.deleted" },
-    async({ event }) => {
-        const { id } = event.data;
-        await User.deleteOne({ clerkId: id } );
+  { id: "delete-user-from-db" },
+  { event: "clerk/user.deleted" },
+  async ({ event }) => {
+    await connectDB(); 
+    const { id } = event.data;
+    await User.deleteOne({ clerkId: id });
 
-        await deleteStreamUser(id.toString());
-    }
+    await deleteStreamUser(id.toString());
+  }
 );
 
 
