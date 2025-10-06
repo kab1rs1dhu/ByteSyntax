@@ -70,7 +70,7 @@ const HomePage = () => {
               <div className="team-channel-list__header gap-4">
                 <div className="brand-container">
                   <img src="/logo.png" alt="Logo" className="brand-logo" />
-                  <span className="brand-name">Slap</span>
+                  <span className="brand-name">Byte-Syntax</span>
                 </div>
                 <div className="user-button-wrapper">
                   <UserButton />
