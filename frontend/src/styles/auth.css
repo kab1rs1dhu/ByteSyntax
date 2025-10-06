@@ -212,38 +212,230 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .auth-left {
+    padding: 2.5rem 2rem;
+  }
+
+  .auth-hero {
+    padding: 2.5rem;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
 @media (max-width: 768px) {
   .auth-container {
     flex-direction: column;
   }
 
   .auth-left {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
     order: 2; /* Content comes second on mobile */
   }
 
   .auth-hero {
-    padding: 2rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
   }
 
   .auth-right {
-    min-height: 40vh;
+    min-height: 35vh;
     padding: 1rem;
     order: 1; /* Image comes first on mobile */
   }
 
   .auth-image-container {
-    max-width: 360px;
-    max-height: 420px;
-    animation: float 5s ease-in-out infinite;
+    max-width: 340px;
+    max-height: 380px;
+    border-radius: 1.5rem;
   }
 
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .brand-name {
+    font-size: 1.75rem;
+  }
+
+  .brand-logo {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .features-list {
+    gap: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-item {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .feature-icon {
+    font-size: 1.35rem;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .cta-button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-left {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .auth-hero {
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+  }
+
+  .auth-right {
+    min-height: 30vh;
+    padding: 0.875rem;
+  }
+
+  .auth-image-container {
+    max-width: 300px;
+    max-height: 340px;
+    border-radius: 1.25rem;
+  }
+
+  .hero-title {
     font-size: 2rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .brand-name {
+    font-size: 1.5rem;
+    letter-spacing: 0.075em;
+  }
+
+  .brand-logo {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .features-list {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .feature-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+    gap: 0.875rem;
+  }
+
+  .feature-icon {
+    font-size: 1.25rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .cta-button {
+    padding: 0.875rem 1.75rem;
+    font-size: 0.9375rem;
+    border-radius: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-left {
+    padding: 1rem 0.75rem;
+  }
+
+  .auth-hero {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .auth-right {
+    min-height: 25vh;
+    padding: 0.75rem;
+  }
+
+  .auth-image-container {
+    max-width: 260px;
+    max-height: 300px;
+    border-radius: 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .brand-name {
+    font-size: 1.35rem;
+    letter-spacing: 0.05em;
+  }
+
+  .brand-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .brand-container {
+    gap: 0.75rem;
+  }
+
+  .features-list {
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-item {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+    gap: 0.75rem;
+    border-radius: 0.875rem;
+  }
+
+  .feature-icon {
+    font-size: 1.125rem;
+    width: 1.875rem;
+    height: 1.875rem;
+  }
+
+  .cta-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    gap: 0.5rem;
   }
 }
 
