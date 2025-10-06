@@ -15,7 +15,7 @@ import {
 } from "stream-chat-react";
 
 import "../styles/stream-chat-theme.css";
-import { HashIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { HashIcon, PlusIcon, UsersIcon, MenuIcon, XIcon } from "lucide-react";
 import CreateChannelModal from "../components/CreateChannelModal";
 import CustomChannelPreview from "../components/CustomChannelPreview";
 import UsersList from "../components/UsersList";
@@ -25,6 +25,7 @@ const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [activeChannel, setActiveChannel] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const { chatClient, error, isLoading } = useStreamChat();
 
@@ -46,15 +47,30 @@ const HomePage = () => {
   return (
     <div className="chat-wrapper">
       <Chat client={chatClient}>
+        {/* Mobile Sidebar Toggle */}
+        <button
+          className={`mobile-sidebar-toggle ${isMobileSidebarOpen ? "active" : ""}`}
+          onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+          aria-label="Toggle sidebar"
+        >
+          {isMobileSidebarOpen ? <XIcon className="size-5" /> : <MenuIcon className="size-5" />}
+        </button>
+
+        {/* Mobile Overlay */}
+        <div
+          className={`mobile-overlay ${isMobileSidebarOpen ? "active" : ""}`}
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+
         <div className="chat-container">
           {/* LEFT SIDEBAR */}
-          <div className="str-chat__channel-list">
+          <div className={`str-chat__channel-list ${isMobileSidebarOpen ? "mobile-open" : ""}`}>
             <div className="team-channel-list">
               {/* HEADER */}
               <div className="team-channel-list__header gap-4">
                 <div className="brand-container">
                   <img src="/logo.png" alt="Logo" className="brand-logo" />
-                  <span className="brand-name">Slap</span>
+                  <span className="brand-name">Byte-Syntax</span>
                 </div>
                 <div className="user-button-wrapper">
                   <UserButton />
@@ -77,7 +93,10 @@ const HomePage = () => {
                     <CustomChannelPreview
                       channel={channel}
                       activeChannel={activeChannel}
-                      setActiveChannel={(channel) => setSearchParams({ channel: channel.id })}
+                      setActiveChannel={(channel) => {
+                        setSearchParams({ channel: channel.id });
+                        setIsMobileSidebarOpen(false);
+                      }}
                     />
                   )}
                   List={({ children, loading, error }) => (

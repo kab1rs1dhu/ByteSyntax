@@ -67,12 +67,19 @@ const CallPage = () => {
   }, [tokenData, user, callId]);
 
   if (isConnecting || !isLoaded) {
-    return <div className="h-screen flex justify-center items-center">Connecting to call...</div>;
+    return (
+      <div className="h-screen flex justify-center items-center bg-gradient-to-br from-purple-900 via-indigo-900 to-pink-900 text-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-lg">Connecting to call...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="relative w-full max-w-4xl mx-auto">
+    <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-900 via-indigo-900 to-pink-900 p-0 md:p-4">
+      <div className="relative w-full h-full md:h-auto md:max-w-6xl lg:max-w-7xl mx-auto md:rounded-2xl overflow-hidden shadow-2xl">
         {client && call ? (
           <StreamVideo client={client}>
             <StreamCall call={call}>
@@ -80,8 +87,10 @@ const CallPage = () => {
             </StreamCall>
           </StreamVideo>
         ) : (
-          <div className="flex items-center justify-center h-full">
-            <p>Could not initialize call. Please refresh or try again later</p>
+          <div className="flex items-center justify-center h-full bg-gray-900 text-white p-4">
+            <div className="text-center">
+              <p className="text-lg md:text-xl">Could not initialize call. Please refresh or try again later</p>
+            </div>
           </div>
         )}
       </div>
