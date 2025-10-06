@@ -15,7 +15,7 @@ import {
 } from "stream-chat-react";
 
 import "../styles/stream-chat-theme.css";
-import { HashIcon, PlusIcon, UsersIcon, MenuIcon, XIcon } from "lucide-react";
+import { HashIcon, PlusIcon, UsersIcon, Menu, X } from "lucide-react";
 import CreateChannelModal from "../components/CreateChannelModal";
 import CustomChannelPreview from "../components/CustomChannelPreview";
 import UsersList from "../components/UsersList";
@@ -40,37 +40,45 @@ const HomePage = () => {
     }
   }, [chatClient, searchParams]);
 
-  // todo: handle this with a better component
+  // Close mobile sidebar when channel is selected
+  useEffect(() => {
+    if (activeChannel) {
+      setIsMobileSidebarOpen(false);
+    }
+  }, [activeChannel]);
+
   if (error) return <p>Something went wrong...</p>;
   if (isLoading || !chatClient) return <PageLoader />;
 
   return (
     <div className="chat-wrapper">
       <Chat client={chatClient}>
-        {/* Mobile Sidebar Toggle */}
-        <button
-          className={`mobile-sidebar-toggle ${isMobileSidebarOpen ? "active" : ""}`}
-          onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-          aria-label="Toggle sidebar"
-        >
-          {isMobileSidebarOpen ? <XIcon className="size-5" /> : <MenuIcon className="size-5" />}
-        </button>
-
-        {/* Mobile Overlay */}
-        <div
-          className={`mobile-overlay ${isMobileSidebarOpen ? "active" : ""}`}
-          onClick={() => setIsMobileSidebarOpen(false)}
-        />
-
         <div className="chat-container">
+          {/* Mobile Menu Button */}
+          <button 
+            className="mobile-menu-button"
+            onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileSidebarOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
+
+          {/* Mobile Overlay */}
+          {isMobileSidebarOpen && (
+            <div 
+              className="mobile-sidebar-overlay"
+              onClick={() => setIsMobileSidebarOpen(false)}
+            />
+          )}
+
           {/* LEFT SIDEBAR */}
-          <div className={`str-chat__channel-list ${isMobileSidebarOpen ? "mobile-open" : ""}`}>
+          <div className={`str-chat__channel-list ${isMobileSidebarOpen ? 'mobile-sidebar-open' : ''}`}>
             <div className="team-channel-list">
               {/* HEADER */}
               <div className="team-channel-list__header gap-4">
                 <div className="brand-container">
                   <img src="/logo.png" alt="Logo" className="brand-logo" />
-                  <span className="brand-name">Byte-Syntax</span>
+                  <span className="brand-name">Slap</span>
                 </div>
                 <div className="user-button-wrapper">
                   <UserButton />
@@ -93,10 +101,7 @@ const HomePage = () => {
                     <CustomChannelPreview
                       channel={channel}
                       activeChannel={activeChannel}
-                      setActiveChannel={(channel) => {
-                        setSearchParams({ channel: channel.id });
-                        setIsMobileSidebarOpen(false);
-                      }}
+                      setActiveChannel={(channel) => setSearchParams({ channel: channel.id })}
                     />
                   )}
                   List={({ children, loading, error }) => (
@@ -108,7 +113,6 @@ const HomePage = () => {
                         </div>
                       </div>
 
-                      {/* todos: add better components here instead of just a simple text  */}
                       {loading && <div className="loading-message">Loading channels...</div>}
                       {error && <div className="error-message">Error loading channels</div>}
 
@@ -147,4 +151,5 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;
