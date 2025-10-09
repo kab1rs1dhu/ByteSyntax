@@ -1,0 +1,481 @@
+/* Premium Modern Chat UI - Enhanced Styling */
+
+/* Safe area handling */
+.safe-area-padding-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Custom scrollbar styling */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(71 85 105) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thumb-slate-600::-webkit-scrollbar-thumb {
+  background-color: rgb(71 85 105);
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease;
+}
+
+.scrollbar-thumb-slate-600::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(100 116 139);
+}
+
+/* Stream Chat customizations - Complete override */
+.str-chat__channel-list {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.str-chat__channel-list-messenger {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.str-chat__channel-list-messenger__main {
+  padding: 0 !important;
+  background-color: transparent !important;
+}
+
+.str-chat__channel-preview {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.str-chat__channel-preview:hover,
+.str-chat__channel-preview--active {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Hide all default Stream preview content */
+.str-chat__channel-preview__content,
+.str-chat__channel-preview__name,
+.str-chat__channel-preview__last-message,
+.str-chat__channel-preview__unread-count,
+.str-chat__channel-preview__avatar,
+.str-chat__channel-preview__title {
+  display: none !important;
+}
+
+/* Hide default headers and search */
+.str-chat__channel-search,
+.str-chat__channel-list__header,
+.str-chat__channel-list__header__title,
+.str-chat__channel-list-messenger__main__header {
+  display: none !important;
+}
+
+/* Enhanced Message List Styling */
+.str-chat__message-list {
+  background: linear-gradient(145deg, rgb(30 41 59) 0%, rgb(51 65 85) 100%) !important;
+  padding: 1.5rem !important;
+}
+
+.str-chat__message-list-scroll {
+  padding: 0 !important;
+}
+
+.str-chat__message-simple {
+  background: rgba(51, 65, 85, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(71, 85, 105, 0.3) !important;
+  border-radius: 1rem !important;
+  margin-bottom: 1rem !important;
+  padding: 1rem 1.25rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.str-chat__message-simple:hover {
+  background: rgba(71, 85, 105, 0.4) !important;
+  border-color: rgba(100, 116, 139, 0.5) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.str-chat__message-simple__content {
+  background-color: transparent !important;
+}
+
+.str-chat__message-simple__text {
+  color: rgb(241 245 249) !important;
+  line-height: 1.6 !important;
+  font-size: 0.95rem !important;
+}
+
+.str-chat__message-simple__text p {
+  margin: 0 !important;
+  word-wrap: break-word !important;
+}
+
+/* Message Author Styling */
+.str-chat__message-simple__name {
+  color: rgb(148 163 184) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Enhanced Message Input */
+.str-chat__message-input {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(51, 65, 85, 0.95) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(71, 85, 105, 0.5) !important;
+  padding: 1.5rem !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.str-chat__message-input__wrapper {
+  background: rgba(51, 65, 85, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+  border-radius: 1.25rem !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  overflow: hidden !important;
+}
+
+.str-chat__message-input__wrapper:focus-within {
+  border-color: rgb(59 130 246) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  background: rgba(59, 130, 246, 0.05) !important;
+}
+
+.str-chat__message-input__input {
+  background-color: transparent !important;
+  color: rgb(248 250 252) !important;
+  border: none !important;
+  outline: none !important;
+  padding: 1rem 1.25rem !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  resize: none !important;
+}
+
+.str-chat__message-input__input::placeholder {
+  color: rgb(148 163 184) !important;
+  font-weight: 400 !important;
+}
+
+/* Premium Send Button */
+.str-chat__send-button {
+  background: linear-gradient(135deg, rgb(59 130 246) 0%, rgb(147 51 234) 100%) !important;
+  border: none !important;
+  border-radius: 1rem !important;
+  color: white !important;
+  padding: 1rem !important;
+  margin-left: 1rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  cursor: pointer !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+}
+
+.str-chat__send-button:hover {
+  background: linear-gradient(135deg, rgb(37 99 235) 0%, rgb(126 34 206) 100%) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+.str-chat__send-button:active {
+  transform: translateY(0) scale(1.02) !important;
+}
+
+.str-chat__send-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Enhanced Avatar Styling */
+.str-chat__avatar {
+  border-radius: 1rem !important;
+  border: 2px solid rgba(71, 85, 105, 0.5) !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.str-chat__avatar:hover {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Thread Styling */
+.str-chat__thread {
+  background: linear-gradient(145deg, rgb(30 41 59) 0%, rgb(51 65 85) 100%) !important;
+  border-left: 1px solid rgba(71, 85, 105, 0.5) !important;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Message Actions */
+.str-chat__message-actions-box {
+  background: rgba(30, 41, 59, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(71, 85, 105, 0.5) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.str-chat__message-actions-box button {
+  background: transparent !important;
+  color: rgb(148 163 184) !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.str-chat__message-actions-box button:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+  color: rgb(59 130 246) !important;
+}
+
+/* Reactions */
+.str-chat__reaction-list {
+  background: rgba(30, 41, 59, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 1.5rem !important;
+  padding: 0.375rem 0.75rem !important;
+  border: 1px solid rgba(71, 85, 105, 0.3) !important;
+}
+
+.str-chat__reaction {
+  background: rgba(71, 85, 105, 0.6) !important;
+  border-radius: 0.75rem !important;
+  margin: 0 0.125rem !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid transparent !important;
+}
+
+.str-chat__reaction:hover {
+  background: rgba(59, 130, 246, 0.2) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Loading States */
+.str-chat__loading-indicator {
+  color: rgb(148 163 184) !important;
+}
+
+.str-chat__loading-channels {
+  background-color: transparent !important;
+  color: rgb(148 163 184) !important;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  /* Touch-friendly sizing */
+  button, 
+  .str-chat__channel-preview,
+  .str-chat__message-simple {
+    min-height: 48px !important;
+  }
+
+  /* Mobile message input */
+  .str-chat__message-input {
+    padding: 1rem !important;
+  }
+
+  .str-chat__message-input__wrapper {
+    border-radius: 1.5rem !important;
+  }
+
+  .str-chat__message-input__input {
+    padding: 1rem 1.25rem !important;
+    font-size: 1rem !important;
+  }
+
+  .str-chat__send-button {
+    padding: 1rem !important;
+    border-radius: 50% !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    margin-left: 0.75rem !important;
+  }
+
+  /* Mobile message list */
+  .str-chat__message-list {
+    padding: 1rem !important;
+  }
+
+  .str-chat__message-simple {
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Mobile thread overlay */
+  .str-chat__thread {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+    border-left: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Mobile avatar sizing */
+  .str-chat__avatar {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+}
+
+/* Desktop enhancements */
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  /* Desktop hover states */
+  .str-chat__message-simple:hover .str-chat__message-actions-box {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Desktop thread sizing */
+  .str-chat__thread {
+    min-width: 420px !important;
+    max-width: 500px !important;
+  }
+}
+
+/* Utility classes */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Enhanced animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.str-chat__message-simple {
+  animation: slideInUp 0.4s ease-out !important;
+}
+
+/* Error states */
+.str-chat__channel-list-messenger--error {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  border-radius: 1rem !important;
+  color: rgb(248 113 113) !important;
+  padding: 1.5rem !important;
+  margin: 1rem !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Accessibility improvements */
+.str-chat__message-input__input:focus,
+.str-chat__send-button:focus {
+  outline: 2px solid rgb(59 130 246) !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .str-chat__message-simple {
+    border: 2px solid rgb(148 163 184) !important;
+    background: rgba(30, 41, 59, 0.8) !important;
+  }
+  
+  .str-chat__message-input__wrapper {
+    border: 2px solid rgb(148 163 184) !important;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .str-chat__send-button:hover {
+    transform: none !important;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .str-chat__message-simple {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .str-chat__message-input {
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* Performance optimizations */
+.str-chat__message-list-scroll,
+.str-chat__thread-list {
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+}
+
+/* Premium loading skeleton */
+.loading-skeleton {
+  background: linear-gradient(90deg, rgba(71, 85, 105, 0.2) 25%, rgba(100, 116, 139, 0.3) 50%, rgba(71, 85, 105, 0.2) 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Custom focus states */
+.focus-ring:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: rgb(59 130 246) !important;
+}

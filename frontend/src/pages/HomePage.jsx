@@ -1,5 +1,5 @@
 import { UserButton } from "@clerk/clerk-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { useStreamChat } from "../hooks/useStreamChat";
 import PageLoader from "../components/PageLoader";
@@ -8,409 +8,449 @@ import {
   Chat,
   Channel,
   ChannelList,
-  MessageInput,
   MessageList,
+  MessageInput,
   Thread,
   Window,
 } from "stream-chat-react";
 
 import "../styles/stream-chat-theme.css";
-import { ArrowLeft, Hash, Menu, MessageSquare, UserCircle2, UsersRound } from "lucide-react";
+import { 
+  HashIcon, 
+  PlusIcon, 
+  UsersIcon, 
+  MessageCircle, 
+  ArrowLeft,
+  Settings,
+  Phone,
+  Video,
+  Search,
+  Bell,
+  MoreHorizontal,
+  User,
+  Sparkles,
+  ChevronDown,
+  Zap,
+  Shield,
+  Crown
+} from "lucide-react";
+import CreateChannelModal from "../components/CreateChannelModal";
+import CustomChannelPreview from "../components/CustomChannelPreview";
 import UsersList from "../components/UsersList";
 import CustomChannelHeader from "../components/CustomChannelHeader";
 
-const MOBILE_TABS = [
-  { key: "channels", label: "Channels", icon: Hash },
-  { key: "chat", label: "Chat", icon: MessageSquare },
-];
-
 const HomePage = () => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [activeChannel, setActiveChannel] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [mobileView, setMobileView] = useState("channels");
-  const [isMobile, setIsMobile] = useState(false);
+  const [activeTab, setActiveTab] = useState('channels');
+  const [showUsersList, setShowUsersList] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { chatClient, error, isLoading } = useStreamChat();
 
-  // Determine mobile layout
+  // Debounced search to avoid excessive API calls
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  
   useEffect(() => {
-    const checkIsMobile = () => setIsMobile(window.innerWidth <= 768);
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-    checkIsMobile();
-    window.addEventListener("resize", checkIsMobile);
-
-    return () => window.removeEventListener("resize", checkIsMobile);
-  }, []);
-
-  // Sync active channel from URL
+  // Set active channel from URL params
   useEffect(() => {
-    if (!chatClient) return;
-
-    const channelId = searchParams.get("channel");
-    let isMounted = true;
-
-    const setChannelFromParams = async () => {
-      if (!channelId) return;
-      try {
+    if (chatClient) {
+      const channelId = searchParams.get("channel");
+      if (channelId) {
         const channel = chatClient.channel("messaging", channelId);
-        await channel.watch();
-
-        if (isMounted) {
-          setActiveChannel(channel);
-          if (isMobile) setMobileView("chat");
+        setActiveChannel(channel);
+        if (window.innerWidth < 768) {
+          setActiveTab('chat');
         }
-      } catch (channelError) {
-        console.error("Failed to load channel", channelError);
       }
-    };
-
-    setChannelFromParams();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [chatClient, searchParams, isMobile]);
-
-  // Preload most recent channel
-  useEffect(() => {
-    if (!chatClient || activeChannel) return;
-    let isMounted = true;
-
-    const loadInitialChannel = async () => {
-      try {
-        const channels = await chatClient.queryChannels(
-          { members: { $in: [chatClient?.user?.id] }, type: "messaging" },
-          { last_message_at: -1 },
-          { limit: 1 }
-        );
-
-        if (isMounted && channels?.length) {
-          const firstChannel = channels[0];
-          await firstChannel.watch();
-          setActiveChannel(firstChannel);
-          setSearchParams({ channel: firstChannel.id }, { replace: true });
-        }
-      } catch (channelError) {
-        console.error("Failed to fetch initial channel", channelError);
-      }
-    };
-
-    loadInitialChannel();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [chatClient, activeChannel, setSearchParams]);
-
-  useEffect(() => {
-    if (!isMobile) {
-      setMobileView("channels");
     }
-  }, [isMobile]);
+  }, [chatClient, searchParams]);
 
-  // Memoize filters so Stream only re-queries when the current user changes.
-  const channelFilters = useMemo(
-    () => ({
-      members: { $in: [chatClient?.user?.id] },
-      type: "messaging",
-    }),
-    [chatClient?.user?.id]
-  );
+  // Handle channel selection
+  const handleChannelSelect = useCallback((channel) => {
+    setActiveChannel(channel);
+    setSearchParams({ channel: channel.id });
+    if (window.innerWidth < 768) {
+      setActiveTab('chat');
+    }
+  }, [setSearchParams]);
 
-  // Memoizing options prevents unnecessary renders while navigating.
-  const channelOptions = useMemo(
-    () => ({
-      state: true,
-      watch: true,
-      limit: 50,
-    }),
-    []
-  );
+  // Handle back navigation on mobile
+  const handleBackToChannels = useCallback(() => {
+    setActiveTab('channels');
+    setActiveChannel(null);
+    setSearchParams({});
+  }, [setSearchParams]);
 
-  const getChannelMeta = useCallback(
-    (channel) => {
-      const members = Object.values(channel?.state?.members || {});
-      const isDM =
-        channel?.data?.member_count === 2 ||
-        channel?.id?.includes("user_") ||
-        channel?.data?.type === "direct";
+  // Optimized channel filters
+  const channelFilters = useMemo(() => ({
+    type: 'messaging',
+    members: { $in: [chatClient?.userID || ''] },
+    ...(debouncedSearchQuery && {
+      $or: [
+        { name: { $autocomplete: debouncedSearchQuery } },
+        { 'member.user.name': { $autocomplete: debouncedSearchQuery } }
+      ]
+    })
+  }), [chatClient?.userID, debouncedSearchQuery]);
 
-      let badge = isDM ? "Direct Message" : "Team Channel";
-      let title = channel?.data?.name || channel?.data?.id || "Untitled";
-      let initials = title
-        .split(/[\s_-]+/)
-        .slice(0, 2)
-        .map((word) => word.charAt(0).toUpperCase())
-        .join("");
-      let avatar = null;
-
-      if (isDM) {
-        const otherMember = members.find((member) => member.user?.id !== chatClient?.user?.id);
-        if (otherMember?.user) {
-          title = otherMember.user.name || otherMember.user.id || title;
-          badge = "Direct Message";
-          avatar = otherMember.user.image || null;
-          initials = (otherMember.user.name || otherMember.user.id || "?").charAt(0).toUpperCase();
-        }
-      }
-
-      const lastMessage =
-        channel?.state?.messages?.length > 0
-          ? channel.state.messages[channel.state.messages.length - 1]
-          : null;
-
-      return {
-        isDM,
-        title,
-        badge,
-        avatar,
-        initials,
-        lastMessage,
-      };
-    },
-    [chatClient?.user?.id]
-  );
-
-  const handleChannelSelect = useCallback(
-    async (channel) => {
-      if (!channel) return;
-      try {
-        await channel.watch();
-      } catch (watchError) {
-        console.error("Unable to watch channel", watchError);
-      }
-
-      setActiveChannel(channel);
-      setSearchParams({ channel: channel.id });
-      if (isMobile) setMobileView("chat");
-    },
-    [isMobile, setSearchParams]
-  );
-
-  const mobileChannelLabel = activeChannel?.data?.name || activeChannel?.data?.id || "Channel";
-
-  const renderChannelPreview = useCallback(
-    ({ channel }) => {
-      const unreadCount = channel.countUnread();
-      const isActive = activeChannel?.id === channel.id;
-      const { isDM, title, badge, avatar, initials, lastMessage } = getChannelMeta(channel);
-
-      const lastMessagePreview = lastMessage?.text || lastMessage?.attachments?.[0]?.title || "";
-
-      return (
-        <button
-          onClick={() => handleChannelSelect(channel)}
-          className={`w-full rounded-2xl border px-4 py-3 text-left shadow-sm transition-all ${
-            isActive
-              ? "border-blue-500/60 bg-slate-900 text-slate-50 shadow-lg shadow-blue-900/30"
-              : "border-slate-900 bg-slate-950/80 text-slate-300 hover:border-slate-700 hover:bg-slate-900 hover:text-white"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/90 text-sm font-semibold uppercase text-slate-200">
-              {avatar ? (
-                <img src={avatar} alt={title} className="h-10 w-10 rounded-xl object-cover" />
-              ) : isDM ? (
-                initials
-              ) : (
-                "#"
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="truncate text-base font-semibold">{title}</span>
-                {unreadCount > 0 && (
-                  <span className="ml-2 inline-flex min-w-[1.5rem] items-center justify-center rounded-full bg-blue-500 px-2 text-xs font-bold">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </div>
-              <div className="mt-0.5 flex items-center gap-2 text-xs uppercase tracking-wide text-slate-500">
-                <span>{badge}</span>
-                {!isDM && channel.data?.topic && (
-                  <>
-                    <span className="h-1 w-1 rounded-full bg-slate-700" />
-                    <span className="truncate text-[0.65rem] uppercase">{channel.data.topic}</span>
-                  </>
-                )}
-              </div>
-            </div>
+  if (error) {
+    return (
+      <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center p-8 bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-slate-700/50 max-w-md mx-4">
+          <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Zap className="text-red-400 w-8 h-8" />
           </div>
-          {lastMessagePreview && (
-            <p className="mt-2 line-clamp-2 text-sm text-slate-400">{lastMessagePreview}</p>
-          )}
-        </button>
-      );
-    },
-    [activeChannel?.id, getChannelMeta, handleChannelSelect]
-  );
-
-  const renderChannelList = useCallback(
-    ({ children, loading, error: listError }) => (
-      <div className="space-y-2">
-        {loading && (
-          <div className="rounded-xl border border-slate-900 bg-slate-950/70 px-3 py-2 text-sm text-slate-400">
-            Loading…
-          </div>
-        )}
-        {listError && (
-          <div className="rounded-xl border border-red-900/40 bg-red-900/20 px-3 py-2 text-sm text-red-300">
-            Error loading channels
-          </div>
-        )}
-        {children}
+          <h2 className="text-xl font-bold text-white mb-3">Connection Lost</h2>
+          <p className="text-slate-400 mb-6 leading-relaxed">
+            We're having trouble connecting to the chat service. Check your internet connection and try again.
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105"
+          >
+            Reconnect
+          </button>
+        </div>
       </div>
-    ),
-    []
-  );
+    );
+  }
 
-  if (error) return <p className="p-6 text-center text-red-300">Something went wrong…</p>;
   if (isLoading || !chatClient) return <PageLoader />;
 
-  return (
-    <div className="h-screen w-screen overflow-hidden bg-slate-950 text-slate-100">
-      <Chat client={chatClient}>
-        <div className="relative flex h-full w-full">
-          {/* Desktop sidebar */}
-          <aside
-            className={`flex h-full flex-col border-r border-slate-900 bg-slate-950/95 backdrop-blur ${
-              isMobile
-                ? `absolute inset-0 z-20 flex flex-col ${
-                    mobileView === "channels" ? "translate-x-0" : "-translate-x-full"
-                  } transition-transform duration-200`
-                : "w-80 flex-shrink-0"
-            }`}
-          >
-            <div className="flex items-center justify-between border-b border-slate-900 px-4 py-4">
-              <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="Logo" className="h-9 w-9 rounded-xl object-cover" />
-                <div>
-                  <p className="text-sm uppercase tracking-wide text-slate-500">Workspace</p>
-                  <p className="text-lg font-semibold text-white">Byte Syntax</p>
-                </div>
-              </div>
-              <UserButton appearance={{ elements: { userButtonOuterIdentifier: "hidden" } }} />
-            </div>
+  // Enhanced channel preview component
+  const EnhancedChannelPreview = (props) => {
+    const { channel, latestMessage, unread } = props;
+    const isDM = channel.data?.member_count === 2 && channel.data?.id?.includes("user_");
+    
+    const otherUser = isDM ? Object.values(channel.state.members || {}).find(
+      member => member.user.id !== chatClient.userID
+    ) : null;
 
-            <div className="flex-1 overflow-y-auto px-4 py-4 pb-28">
-              <div className="space-y-6">
-                <section className="space-y-3">
-                  <div className="flex items-center justify-between text-slate-400">
-                    <div className="flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-widest text-slate-500">
-                      <Hash className="h-4 w-4" />
-                      Channels
-                    </div>
-                    <Menu className="h-4 w-4" />
-                  </div>
-                  <ChannelList
-                    filters={channelFilters}
-                    options={channelOptions}
-                    Preview={renderChannelPreview}
-                    List={renderChannelList}
+    const isActive = activeChannel?.id === channel.id;
+
+    return (
+      <div 
+        onClick={() => handleChannelSelect(channel)}
+        className={`group relative mx-3 mb-2 p-3 rounded-xl cursor-pointer transition-all duration-200 ${
+          isActive 
+            ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 shadow-lg shadow-blue-500/10' 
+            : 'hover:bg-slate-700/40 border border-transparent'
+        }`}
+      >
+        <div className="flex items-center space-x-3">
+          {/* Enhanced Avatar */}
+          <div className="relative flex-shrink-0">
+            {isDM ? (
+              <div className="relative">
+                {otherUser?.user?.image ? (
+                  <img
+                    src={otherUser.user.image}
+                    alt={otherUser.user.name || otherUser.user.id}
+                    className="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-600/50"
                   />
-                </section>
-
-                <section className="space-y-3 border-t border-slate-900 pt-5">
-                  <div className="flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-widest text-slate-500">
-                    <UsersRound className="h-4 w-4" />
-                    Direct messages
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center ring-2 ring-slate-600/50">
+                    <span className="text-white font-bold text-sm">
+                      {(otherUser?.user?.name || otherUser?.user?.id || 'U').charAt(0).toUpperCase()}
+                    </span>
                   </div>
-                  <UsersList activeChannel={activeChannel} onChannelSelected={handleChannelSelect} />
-                </section>
+                )}
+                {/* Enhanced online status */}
+                <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-slate-800 ${
+                  otherUser?.user?.online ? 'bg-green-400' : 'bg-slate-500'
+                }`} />
               </div>
-            </div>
-          </aside>
-
-          {/* Chat area */}
-          <main
-            className={`flex h-full flex-1 flex-col bg-slate-950 ${
-              isMobile && mobileView !== "chat" ? "hidden" : "flex"
-            } ${isMobile ? "pb-20" : ""}`}
-          >
-            {isMobile && (
-              <div className="flex items-center justify-between border-b border-slate-900 bg-slate-950/95 px-4 py-3">
-                <button
-                  onClick={() => setMobileView("channels")}
-                  className="flex items-center gap-2 rounded-lg border border-slate-800 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Channels
-                </button>
-                <div className="flex items-center gap-2">
-                  <UserCircle2 className="h-4 w-4 text-slate-500" />
-                  <span className="max-w-[160px] truncate text-sm font-semibold text-white">
-                    {mobileChannelLabel}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {activeChannel ? (
-              <Channel channel={activeChannel}>
-                <div className="flex h-full flex-1 flex-col lg:flex-row">
-                  <Window>
-                    <div className="flex h-full flex-col bg-slate-950">
-                      <CustomChannelHeader
-                        isMobile={isMobile}
-                        onNavigateBack={isMobile ? () => setMobileView("channels") : undefined}
-                      />
-                      <div className="flex-1 overflow-hidden">
-                        <MessageList />
-                      </div>
-                      <div className="border-t border-slate-900 bg-slate-950/95">
-                        <MessageInput focus />
-                      </div>
-                    </div>
-                  </Window>
-
-                  {/* Desktop thread rail */}
-                  <div className="hidden w-80 flex-col border-l border-slate-900 bg-slate-950/90 lg:flex">
-                    <div className="border-b border-slate-900 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      Thread
-                    </div>
-                    <div className="flex-1 overflow-y-auto">
-                      <Thread />
-                    </div>
-                  </div>
-                </div>
-              </Channel>
             ) : (
-              <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center text-slate-400">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed border-slate-700">
-                  <MessageSquare className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-base font-semibold text-white">Select a conversation</p>
-                  <p className="text-sm">Choose a channel or DM to start chatting.</p>
-                </div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center ring-2 ring-slate-600/50">
+                {channel.data?.private ? (
+                  <Shield className="w-5 h-5 text-slate-300" />
+                ) : (
+                  <HashIcon className="w-5 h-5 text-slate-300" />
+                )}
               </div>
             )}
-          </main>
+          </div>
 
-          {/* Mobile tab bar */}
-          {isMobile && (
-            <div className="mobile-tabbar">
-              {MOBILE_TABS.map(({ key, label, icon: Icon }) => {
-                const isActive = mobileView === key;
-                const disabled = key === "chat" && !activeChannel;
-
-                return (
-                  <button
-                    key={key}
-                    onClick={() => !disabled && setMobileView(key)}
-                    disabled={disabled}
-                    className={`mobile-tabbar__button ${isActive ? "mobile-tabbar__button--active" : ""} ${
-                      disabled ? "mobile-tabbar__button--disabled" : ""
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{label}</span>
-                  </button>
-                );
-              })}
+          {/* Channel Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <h3 className={`font-semibold truncate transition-colors ${
+                isActive ? 'text-white' : 'text-slate-200 group-hover:text-white'
+              }`}>
+                {isDM 
+                  ? otherUser?.user?.name || otherUser?.user?.id || 'Unknown User'
+                  : channel.data?.name || channel.data?.id
+                }
+              </h3>
+              {unread > 0 && (
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center shadow-lg">
+                  {unread > 99 ? '99+' : unread}
+                </div>
+              )}
             </div>
-          )}
+            {latestMessage && (
+              <p className="text-slate-400 text-sm truncate mt-1">
+                <span className="font-medium text-slate-300">
+                  {latestMessage.user?.name || 'Someone'}:
+                </span> {latestMessage.text || 'Message'}
+              </p>
+            )}
+          </div>
         </div>
+
+        {/* Active indicator */}
+        {isActive && (
+          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full" />
+        )}
+      </div>
+    );
+  };
+
+  const ChannelsSidebar = () => (
+    <div className="h-full bg-gradient-to-b from-slate-900 to-slate-900 border-r border-slate-700/50 flex flex-col">
+      {/* Premium Header */}
+      <div className="p-4 border-b border-slate-700/50">
+    
+        {/* Enhanced Search */}
+
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600">
+        {/* Conversations Section */}
+        <div className="pt-6">
+          <div className="flex items-center justify-between px-6 mb-4">
+            <div className="flex items-center space-x-2">
+              <h3 className="text-slate-300 text-sm font-bold uppercase tracking-wider">
+                Conversations
+              </h3>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+            </div>
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-200 group"
+                title="Create Channel"
+              >
+                <PlusIcon size={16} className="group-hover:rotate-90 transition-transform duration-200" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Channel List */}
+          <div>
+            <ChannelList
+              filters={channelFilters}
+              sort={{ 
+                last_message_at: -1,
+                updated_at: -1
+              }}
+              options={{
+                limit: 25,
+                presence: true,
+                state: true,
+                watch: true
+              }}
+              Preview={EnhancedChannelPreview}
+              showChannelSearch={false}
+              LoadingIndicator={() => (
+                <div className="flex items-center justify-center py-12">
+                  <div className="relative">
+                    <div className="w-8 h-8 border-4 border-slate-600 rounded-full animate-spin"></div>
+                    <div className="absolute top-0 left-0 w-8 h-8 border-4 border-blue-500 rounded-full animate-spin border-t-transparent"></div>
+                  </div>
+                </div>
+              )}
+              EmptyStateIndicator={() => (
+                <div className="text-center py-12 px-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <MessageCircle className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-slate-300 font-semibold mb-2">No conversations yet</h3>
+                  <p className="text-slate-500 text-sm mb-6">Start chatting with your team</p>
+                  <button
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105"
+                  >
+                    Create Channel
+                  </button>
+                </div>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="p-4 mt-6 border-t border-slate-700/30">
+          <div className="space-y-2">
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="w-full flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-purple-500/10 rounded-xl transition-all duration-200 group border border-transparent hover:border-blue-400/20"
+            >
+              <PlusIcon size={18} className="mr-3 group-hover:rotate-90 transition-transform duration-200" />
+              <span className="font-medium">Create Channel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ChatArea = () => (
+    <div className="h-full flex flex-col bg-gradient-to-br from-slate-800 to-slate-900">
+      {activeChannel ? (
+        <Channel channel={activeChannel} key={activeChannel.id}>
+          <Window>
+            <CustomChannelHeader 
+              isMobile={window.innerWidth < 768}
+              onNavigateBack={handleBackToChannels}
+            />
+            <MessageList 
+              threadList={false}
+              hideDeletedMessage={true}
+              messageActions={['edit', 'delete', 'flag', 'pin', 'reply']}
+            />
+            <MessageInput 
+              focus={true}
+              grow={true}
+              maxRows={4}
+              publishTypingEvent={true}
+            />
+          </Window>
+          <Thread />
+        </Channel>
+      ) : (
+        <div className="flex-1 flex items-center justify-center p-8">
+          <div className="text-center max-w-lg">
+            {/* Enhanced welcome animation */}
+            <div className="relative mb-8">
+              <div className="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-3xl flex items-center justify-center shadow-2xl">
+                <MessageCircle size={60} className="text-white" />
+              </div>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                <Sparkles size={16} className="text-white" />
+              </div>
+            </div>
+            
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Welcome to Your Workspace
+            </h2>
+            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+              Select a conversation from the sidebar to start chatting, or create a new channel to collaborate with your team.
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="group bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <PlusIcon size={20} className="mx-auto mb-2 group-hover:rotate-90 transition-transform duration-200" />
+                Create Channel
+              </button>
+              <button
+                onClick={() => setShowUsersList(true)}
+                className="group bg-slate-700/50 hover:bg-slate-600/50 text-white px-6 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 border border-slate-600/50 hover:border-slate-500/50"
+              >
+                <User size={20} className="mx-auto mb-2" />
+                Direct Message
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="h-screen bg-slate-900 flex flex-col">
+      <Chat client={chatClient}>
+        {/* Desktop Layout */}
+        <div className="hidden md:flex h-full">
+          <div className="w-80 flex-shrink-0">
+            <ChannelsSidebar />
+          </div>
+          <div className="flex-1">
+            <ChatArea />
+          </div>
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="md:hidden h-full flex flex-col">
+          <div className="flex-1 overflow-hidden">
+            {activeTab === 'channels' ? (
+              <ChannelsSidebar />
+            ) : (
+              <ChatArea />
+            )}
+          </div>
+
+          {/* Enhanced Mobile Navigation */}
+          <div className="bg-slate-900/95 backdrop-blur-lg border-t border-slate-700/50 safe-area-padding-bottom">
+            <div className="flex h-20 px-4">
+              <button
+                onClick={() => setActiveTab('channels')}
+                className={`flex-1 flex flex-col items-center justify-center space-y-1 transition-all duration-300 rounded-2xl mx-2 ${
+                  activeTab === 'channels' 
+                    ? 'text-blue-400 bg-slate-800/50 shadow-lg' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <div className="relative">
+                  <HashIcon size={24} />
+                  {activeTab === 'channels' && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+                  )}
+                </div>
+                <span className="text-xs font-semibold">Channels</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('chat')}
+                className={`flex-1 flex flex-col items-center justify-center space-y-1 transition-all duration-300 rounded-2xl mx-2 ${
+                  activeTab === 'chat' 
+                    ? 'text-purple-400 bg-slate-800/50 shadow-lg' 
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <div className="relative">
+                  <MessageCircle size={24} />
+                  {activeChannel && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full animate-pulse" />
+                  )}
+                </div>
+                <span className="text-xs font-semibold">Chat</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Modals */}
+        {isCreateModalOpen && (
+          <CreateChannelModal
+            onClose={() => setIsCreateModalOpen(false)}
+            onChannelCreated={(channel) => {
+              handleChannelSelect(channel);
+              setIsCreateModalOpen(false);
+            }}
+          />
+        )}
+
+        {showUsersList && (
+          <UsersList
+            onClose={() => setShowUsersList(false)}
+            onUserSelect={(user) => {
+              setShowUsersList(false);
+            }}
+          />
+        )}
       </Chat>
     </div>
   );
