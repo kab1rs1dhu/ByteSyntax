@@ -36,6 +36,7 @@ html, body, #root {
 /* BASIC LAYOUT */
 /* ============================================ */
 
+/* Keep the outer wrapper pinned to the viewport to avoid scroll bleed. */
 .chat-wrapper {
   height: 100vh;
   width: 100vw;
@@ -158,6 +159,7 @@ html, body, #root {
   padding: 0 0.5rem;
 }
 
+/* Buttons double as preview links, so keep them tactile but lightweight. */
 .str-chat__channel-preview-messenger {
   height: 42px;
   margin: 2px 0;
