@@ -6,7 +6,7 @@ import { useChatContext } from "stream-chat-react";
 import * as Sentry from "@sentry/react";
 import { CircleIcon } from "lucide-react";
 
-const UsersList = ({ activeChannel }) => {
+const UsersList = ({ activeChannel, onChannelSelected = () => {} }) => {
   const { client } = useChatContext();
   const [_, setSearchParams] = useSearchParams();
 
@@ -50,6 +50,7 @@ const UsersList = ({ activeChannel }) => {
       });
       await channel.watch();
       setSearchParams({ channel: channel.id });
+      onChannelSelected(channel);
     } catch (error) {
       console.log("Error creating DM", error),
         Sentry.captureException(error, {
@@ -62,12 +63,27 @@ const UsersList = ({ activeChannel }) => {
     }
   };
 
-  if (isLoading) return <div className="team-channel-list__message">Loading users...</div>;
-  if (isError) return <div className="team-channel-list__message">Failed to load users</div>;
-  if (!users.length) return <div className="team-channel-list__message">No other users found</div>;
+  if (isLoading)
+    return (
+      <div className="rounded-xl border border-slate-900 bg-slate-950/75 px-3 py-3 text-[0.7rem] font-semibold uppercase tracking-widest text-slate-500">
+        Loading users…
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="rounded-xl border border-red-900/40 bg-red-900/25 px-3 py-3 text-sm text-red-200">
+        Failed to load users
+      </div>
+    );
+  if (!users.length)
+    return (
+      <div className="rounded-xl border border-slate-900 bg-slate-950/75 px-3 py-3 text-sm text-slate-400">
+        No teammates found
+      </div>
+    );
 
   return (
-    <div className="team-channel-list__users">
+    <div className="space-y-2">
       {users.map((user) => {
         const channelId = [client.user.id, user.id].sort().join("-").slice(0, 64);
         const channel = client.channel("messaging", channelId, {
@@ -80,41 +96,47 @@ const UsersList = ({ activeChannel }) => {
           <button
             key={user.id}
             onClick={() => startDirectMessage(user)}
-            className={`str-chat__channel-preview-messenger  ${isActive && "!bg-black/20 !hover:bg-black/20 border-l-8 border-purple-500 shadow-lg0"
-              }`}
+            className={`flex w-full items-center gap-4 rounded-2xl border px-4 py-3 text-left transition-all ${
+              isActive
+                ? "border-blue-500/60 bg-slate-900 text-slate-50 shadow-lg shadow-blue-900/30"
+                : "border-slate-900 bg-slate-950/80 text-slate-300 hover:border-slate-700 hover:bg-slate-900 hover:text-white"
+            }`}
           >
-            <div className="flex items-center gap-2 w-full">
-              <div className="relative">
-                {user.image ? (
-                  <img
-                    src={user.image}
-                    alt={user.name || user.id}
-                    className="w-4 h-4 rounded-full"
-                  />
-                ) : (
-                  <div className="w-4 h-4 rounded-full bg-gray-400 flex items-center justify-center">
-                    <span className="text-xs text-white">
-                      {(user.name || user.id).charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-
-                <CircleIcon
-                  className={`w-2 h-2 absolute -bottom-0.5 -right-0.5 ${user.online ? "text-green-500 fill-green-500" : "text-gray-400 fill-gray-400"
-                    }`}
+            <div className="relative h-11 w-11 flex-shrink-0">
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt={user.name || user.id}
+                  className="h-11 w-11 rounded-2xl object-cover"
                 />
-              </div>
-
-              <span className="str-chat__channel-preview-messenger-name truncate">
-                {user.name || user.id}
-              </span>
-
-              {unreadCount > 0 && (
-                <span className="flex items-center justify-center ml-2 size-4 text-xs rounded-full bg-red-500 ">
-                  {unreadCount}
-                </span>
+              ) : (
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-800 text-base font-semibold uppercase text-white">
+                  {(user.name || user.id).charAt(0).toUpperCase()}
+                </div>
               )}
+
+              <CircleIcon
+                className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 ${
+                  user.online ? "text-emerald-400" : "text-slate-500"
+                }`}
+                fill="currentColor"
+              />
             </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-semibold tracking-tight">
+                {user.name || user.id}
+              </div>
+              <p className="truncate text-xs text-slate-500">
+                {user.online ? "Active now" : "Last seen recently"}
+              </p>
+            </div>
+
+            {unreadCount > 0 && (
+              <span className="flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-blue-500 px-2 text-xs font-bold text-white">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </button>
         );
       })}
