@@ -20,7 +20,8 @@ app.use(cors({
     origin: ENV.CLIENT_URL, // frontend url
     credentials: true,
 }));
-app.use(clerkMiddleware()) // we need this to check if user is authenticated or not
+// Ensure requests carry Clerk auth context for downstream route handlers.
+app.use(clerkMiddleware()); // we need this to check if user is authenticated or not
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 
+// Register Sentry after routes so it can capture downstream errors gracefully.
 Sentry.setupExpressErrorHandler(app);
 
 
