@@ -108,6 +108,7 @@ const HomePage = () => {
     }
   }, [isMobile]);
 
+  // Memoize filters so Stream only re-queries when the current user changes.
   const channelFilters = useMemo(
     () => ({
       members: { $in: [chatClient?.user?.id] },
@@ -116,6 +117,7 @@ const HomePage = () => {
     [chatClient?.user?.id]
   );
 
+  // Memoizing options prevents unnecessary renders while navigating.
   const channelOptions = useMemo(
     () => ({
       state: true,
