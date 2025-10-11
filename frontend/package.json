@@ -23,7 +23,8 @@
     "react-router": "^7.6.3",
     "stream-chat": "^9.14.0",
     "stream-chat-react": "^13.3.0",
-    "tailwindcss": "^4.1.14"
+    "tailwindcss": "^4.1.14",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
