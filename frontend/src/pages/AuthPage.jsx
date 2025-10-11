@@ -41,9 +41,10 @@ const AuthPage = () => {
         const color = new THREE.Color();
 
         for (let i = 0, l = positionAttribute.count; i < l; i++) {
-          color.setHSL(0.01 + 0.1 * (i / l), 1.0, 0.5);
+          const hue = 0.63 + 0.07 * (i / l); // slide through indigo-to-violet range
+          color.setHSL(hue, 0.9, 0.6);
           color.toArray(colors, i * 3);
-          sizes[i] = PARTICLE_SIZE * 0.5;
+          sizes[i] = PARTICLE_SIZE * 0.55;
         }
 
         const geometry = new THREE.BufferGeometry();
@@ -227,7 +228,7 @@ const AuthPage = () => {
         <div className="auth-left">
           <div className="auth-hero">
             <div className="brand-container">
-              <div className="brand-logo">BS</div>
+              <div className="brand-logo"></div>
               <span className="brand-name">Byte Syntax</span>
             </div>
 
