@@ -1,245 +1,123 @@
-/* Auth Page with Three.js Interactive Particles Background */
-.auth-page {
+.auth-container {
   min-height: 100vh;
-  background: #000000;
-  color: #ffffff;
-  font-family: "Inter", system-ui, sans-serif;
+  display: flex;
+  background: linear-gradient(
+      125deg,
+      #1a0b2e 0%,
+      #16213e 25%,
+      #0f3460 50%,
+      #533483 75%,
+      #7209b7 100%
+    ),
+    radial-gradient(ellipse at top left, rgba(116, 58, 213, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(74, 21, 75, 0.15) 0%, transparent 50%);
   position: relative;
   overflow: hidden;
 }
 
-/* Three.js Background Animation */
-.threejs-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index:1;
-  pointer-events: auto;
-}
-
-.threejs-background canvas {
-  display:block ;
-  width: 100%;
-  height: 100%;
-}
-
-/* Content Overlay */
-.auth-container {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  z-index: 3;
-  background: rgba(0, 0, 0, 0);
-}
-
 .auth-left {
-  flex: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  position: relative;
-  z-index: 3;
-}
-
-.auth-right {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 3rem;
   position: relative;
-  z-index: 3;
-  /* This area is now transparent to show the 3D animation */
+}
+
+.auth-right {
+  flex: 0.8;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .auth-hero {
   max-width: 500px;
-  color: rgb(255, 255, 255);
-  text-align: left;
-  background: rgba(0, 0, 0, 0); /* Slightly more opaque for better readability */
-  backdrop-filter: blur(2px);
+  color: white;
+  z-index: 2;
   padding: 3rem;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 
-              0 0 0 1px rgba(255, 255, 255, 0.05),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 2rem;
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(116, 58, 213, 0.2);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 100px rgba(116, 58, 213, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
-  overflow: hidden;
-}
-
-.auth-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
 .brand-container {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
+  gap: 1rem;
 }
 
 .brand-logo {
-  width: 4rem;
-  height: 4rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, #1a1a1a, #1e3a8a, #2563eb, #000000);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #ffffff;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: logoFloat 3s ease-in-out infinite;
-}
-
-.brand-logo:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6),
-              0 0 0 1px rgba(255, 255, 255, 0.2);
-  animation-play-state: paused;
-}
-
-.brand-logo::after {
-  content: "{  }";
-  font-size:  2.5rem;
-  font-weight: 900;
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  animation: codeSymbolPulse 2s ease-in-out infinite;
-}
-
-@keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-5px) rotate(2deg);
-  }
-}
-
-@keyframes codeSymbolPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.1);
-  }
-}
-
-.brand-logo::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0%, 100% { left: -100%; }
-  50% { left: 100%; }
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .brand-name {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #ffffff, #e2e8f0, #cbd5e1);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: "Monaco", monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(45deg, #fff, #f0f0f0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.025em;
 }
 
 .hero-title {
   font-size: 3.5rem;
-  font-weight: 900;
-  margin-bottom: 1.5rem;
-  color: white;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #ffffff, #f1f5f9, #e2e8f0);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #fff, #e0e0e0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  position: relative;
+  margin-top: 2rem;
 }
 
 .hero-subtitle {
   font-size: 1.25rem;
-  margin-bottom: 2.5rem;
-  color: #cbd5e1;
-  line-height: 1.7;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 2rem;
   opacity: 0.9;
+  color: #f8f9fa;
 }
 
 .features-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .feature-item {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  padding: 1.25rem 1.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
-  border-radius: 0.75rem;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(116, 58, 213, 0.08);
+  border-radius: 1rem;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(116, 58, 213, 0.2);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.feature-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.feature-item:hover::before {
-  left: 100%;
+  box-shadow: 0 4px 20px rgba(74, 21, 75, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .feature-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateX(8px);
-  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3),
-              0 0 0 1px rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(116, 58, 213, 0.15);
+  transform: translateX(0.75rem);
+  box-shadow: 0 8px 30px rgba(74, 21, 75, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(116, 58, 213, 0.3);
 }
 
 .feature-icon {
@@ -249,44 +127,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
-  flex-shrink: 0;
 }
 
 .cta-button {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
-  background: linear-gradient(135deg, #1a1a1a, #1e3a8a, #2563eb, #000000);
+  background: linear-gradient(135deg, #7209b7 0%, #533483 50%, #4a154b 100%);
+  color: white;
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 1.25rem 2.5rem;
-  border-radius: 0.875rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  border: 1px solid rgba(114, 9, 183, 0.3);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-              0 0 0 1px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(74, 21, 75, 0.3), 0 8px 20px rgba(114, 9, 183, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
+  backdrop-filter: blur(15px);
 }
 
 .cta-button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transition: left 0.6s ease;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
 }
 
 .cta-button:hover::before {
@@ -294,114 +167,150 @@
 }
 
 .cta-button:hover {
-  background: linear-gradient(135deg, #2a2a2a, #3a3a3a, #4a4a4a);
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
-              0 0 0 1px rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 25px 60px rgba(74, 21, 75, 0.4), 0 12px 30px rgba(114, 9, 183, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(114, 9, 183, 0.4);
 }
 
 .button-arrow {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
 .cta-button:hover .button-arrow {
   transform: translateX(0.25rem);
 }
 
+.auth-image-container {
+  position: relative;
+  max-width: 480px;
+  max-height: 600px;
+  width: 100%;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(74, 21, 75, 0.25), 0 15px 30px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+  border: 1px solid rgba(116, 58, 213, 0.2);
+}
+
+.auth-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(74, 21, 75, 0.15), rgba(45, 27, 105, 0.15));
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .auth-container {
     flex-direction: column;
-    background: rgba(0, 0, 0, 0); /* More opaque on mobile for readability */
   }
 
   .auth-left {
-    order: 1;
-    padding: 2rem 1rem;
-  }
-
-  .auth-right {
-    order: 2;
-    min-height: 200px;
-    padding: 1rem;
+    padding: 2rem 1.5rem;
   }
 
   .auth-hero {
-    background: rgba(0, 0, 0, 0.8); /* More opaque on mobile */
-    padding: 1.5rem;
+    padding: 2rem;
+  }
+
+  .auth-right {
+    min-height: 40vh;
+    padding: 1rem;
+  }
+
+  .auth-image-container {
+    max-width: 360px;
+    max-height: 420px;
+    animation: float 5s ease-in-out infinite;
   }
 
   .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .brand-name {
     font-size: 2rem;
   }
-
-  .brand-name {
-    font-size: 1.5rem;
-  }
-
-  .cta-button {
-    width: 100%;
-  }
-
-  .threejs-background {
-    /* Reduce animation complexity on mobile if needed */
-    opacity: 0.8;
-  }
 }
 
-@media (max-width: 480px) {
-  .auth-left,
-  .auth-right {
-    padding: 1rem;
-  }
-
-  .auth-hero {
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.9); /* Even more opaque on small screens */
-  }
-
-  .hero-title {
-    font-size: 1.75rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-
-  .brand-name {
-    font-size: 1.25rem;
-  }
-
-  .threejs-background {
-    opacity: 0.6; /* Reduce background intensity on very small screens */
-  }
-}
-
-/* Loading state for Three.js */
-.threejs-background:empty::before {
-  content: '';
+.auth-container::before {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(99, 102, 241, 0.3);
-  border-top: 3px solid #6366f1;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(1px 1px at 25px 35px, rgba(116, 58, 213, 0.4), transparent),
+    radial-gradient(1px 1px at 85px 75px, rgba(74, 21, 75, 0.3), transparent),
+    radial-gradient(1px 1px at 145px 45px, rgba(114, 9, 183, 0.3), transparent),
+    radial-gradient(1px 1px at 195px 85px, rgba(83, 52, 131, 0.3), transparent);
+  background-repeat: repeat;
+  background-size: 250px 120px;
+  animation: gentleFloat 25s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
-@keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+.auth-container::after {
+  content: "";
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(116, 58, 213, 0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: subtleDrift 40s linear infinite;
+  pointer-events: none;
 }
 
-/* Ensure smooth animations */
-* {
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
+/* Floating Animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-15px) translateX(5px);
+  }
+  50% {
+    transform: translateY(-8px) translateX(-3px);
+  }
+  75% {
+    transform: translateY(-12px) translateX(2px);
+  }
+}
+
+@keyframes subtleDrift {
+  0% {
+    transform: rotate(0deg) translateX(0px);
+  }
+  50% {
+    transform: rotate(180deg) translateX(10px);
+  }
+  100% {
+    transform: rotate(360deg) translateX(0px);
+  }
 }
