@@ -11,16 +11,12 @@
 /* Three.js Background Animation */
 .threejs-background {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index:1;
-  pointer-events: auto;
+  inset: 0;
+  z-index: 0;                  /* below content & modal */
+  pointer-events: none;        /* LET MODALS/BUTTONS RECEIVE CLICKS */
 }
-
 .threejs-background canvas {
-  display:block ;
+  display: block;
   width: 100%;
   height: 100%;
 }
@@ -34,51 +30,41 @@
   background: rgba(0, 0, 0, 0);
 }
 
-.auth-left {
-  flex: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  position: relative;
-  z-index: 3;
-}
-
+.auth-left,
 .auth-right {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   position: relative;
   z-index: 3;
-  /* This area is now transparent to show the 3D animation */
 }
+.auth-left { flex: 2; }
+.auth-right { flex: 1; }
 
 .auth-hero {
   max-width: 500px;
-  color: rgb(255, 255, 255);
+  color: #fff;
   text-align: left;
-  background: rgba(0, 0, 0, 0); /* Slightly more opaque for better readability */
+  background: rgba(0, 0, 0, 0);
   backdrop-filter: blur(2px);
   padding: 3rem;
   border-radius: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 
-              0 0 0 1px rgba(255, 255, 255, 0.05),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
 }
-
 .auth-hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 }
 
 .brand-container {
@@ -92,316 +78,165 @@
 }
 
 .brand-logo {
-  width: 4rem;
-  height: 4rem;
+  width: 4rem; height: 4rem;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, #1a1a1a, #1e3a8a, #2563eb, #000000);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #ffffff;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
+  background: linear-gradient(135deg, #1a1a1a, #1e3a8a, #2563eb, #000);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #fff;
+  position: relative; overflow: hidden; cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: logoFloat 3s ease-in-out infinite;
 }
-
 .brand-logo:hover {
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6),
-              0 0 0 1px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.2);
   animation-play-state: paused;
 }
-
 .brand-logo::after {
   content: "{  }";
-  font-size:  2.5rem;
-  font-weight: 900;
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  font-size: 2.5rem; font-weight: 900; color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
   animation: codeSymbolPulse 2s ease-in-out infinite;
 }
-
 @keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-5px) rotate(2deg);
-  }
+  0%,100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-5px) rotate(2deg); }
 }
-
 @keyframes codeSymbolPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.1);
-  }
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .8; transform: scale(1.1); }
 }
-
 .brand-logo::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  content: "";
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
   animation: shimmer 3s infinite;
 }
-
-@keyframes shimmer {
-  0%, 100% { left: -100%; }
-  50% { left: 100%; }
-}
+@keyframes shimmer { 0%,100%{ left:-100%; } 50%{ left:100%; } }
 
 .brand-name {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #ffffff, #e2e8f0, #cbd5e1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 2.25rem; font-weight: 800; color: white;
+  background: linear-gradient(135deg, #fff, #e2e8f0, #cbd5e1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   letter-spacing: -0.025em;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 900;
-  margin-bottom: 1.5rem;
+  font-size: 3.5rem; font-weight: 900; margin-bottom: 1.5rem;
   color: white;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(135deg, #ffffff, #f1f5f9, #e2e8f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  position: relative;
+  background: linear-gradient(135deg, #fff, #f1f5f9, #e2e8f0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1.1; letter-spacing: -0.025em; position: relative;
 }
-
 .hero-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2.5rem;
-  color: #cbd5e1;
-  line-height: 1.7;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  font-weight: 400;
-  opacity: 0.9;
+  font-size: 1.25rem; margin-bottom: 2.5rem; color: #cbd5e1;
+  line-height: 1.7; font-weight: 400; opacity: 0.9;
 }
 
-.features-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  margin-bottom: 2.5rem;
-}
-
+.features-list { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2.5rem; }
 .feature-item {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  display: flex; align-items: center; gap: 1.25rem;
   padding: 1.25rem 1.5rem;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.08);
   backdrop-filter: blur(8px);
-  border-radius: 0.75rem;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  border-radius: 0.75rem; color: white;
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: all .4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative; overflow: hidden;
 }
-
 .feature-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.6s ease;
+  content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left .6s ease;
 }
-
-.feature-item:hover::before {
-  left: 100%;
-}
-
+.feature-item:hover::before { left: 100%; }
 .feature-item:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255,255,255,0.15);
   transform: translateX(8px);
-  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3),
-              0 0 0 1px rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(99,102,241,0.3), 0 0 0 1px rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
 }
-
 .feature-icon {
-  font-size: 1.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+  font-size: 1.5rem; width: 2.5rem; height: 2.5rem;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3));
   border-radius: 50%;
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99,102,241,0.4);
+  box-shadow: 0 4px 15px rgba(99,102,241,0.2);
   flex-shrink: 0;
 }
 
 .cta-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background: linear-gradient(135deg, #1a1a1a, #1e3a8a, #2563eb, #000000);
-  font-size: 1.125rem;
-  font-weight: 700;
-  padding: 1.25rem 2.5rem;
-  border-radius: 0.875rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-              0 0 0 1px rgba(255, 255, 255, 0.1);
+  display: flex; align-items: center; justify-content: center; gap: .75rem;
+  background: linear-gradient(135deg, #1a1a1a, #1e3a8a, #2563eb, #000);
+  font-size: 1.125rem; font-weight: 700;
+  padding: 1.25rem 2.5rem; border-radius: .875rem;
+  border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
+  transition: all .4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
   backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
+  position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: .025em;
 }
-
 .cta-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transition: left 0.6s ease;
+  content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transition: left .6s ease;
 }
-
-.cta-button:hover::before {
-  left: 100%;
-}
-
+.cta-button:hover::before { left: 100%; }
 .cta-button:hover {
   background: linear-gradient(135deg, #2a2a2a, #3a3a3a, #4a4a4a);
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
-              0 0 0 1px rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.3);
 }
+.button-arrow { transition: transform .2s ease; }
+.cta-button:hover .button-arrow { transform: translateX(.25rem); }
 
-.button-arrow {
-  transition: transform 0.2s ease;
-}
-
-.cta-button:hover .button-arrow {
-  transform: translateX(0.25rem);
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-  .auth-container {
-    flex-direction: column;
-    background: rgba(0, 0, 0, 0); /* More opaque on mobile for readability */
-  }
-
-  .auth-left {
-    order: 1;
-    padding: 2rem 1rem;
-  }
-
-  .auth-right {
-    order: 2;
-    min-height: 200px;
-    padding: 1rem;
-  }
-
-  .auth-hero {
-    background: rgba(0, 0, 0, 0.8); /* More opaque on mobile */
-    padding: 1.5rem;
-  }
-
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .brand-name {
-    font-size: 1.5rem;
-  }
-
-  .cta-button {
-    width: 100%;
-  }
-
-  .threejs-background {
-    /* Reduce animation complexity on mobile if needed */
-    opacity: 0.8;
-  }
+  .auth-container { flex-direction: column; }
+  .auth-left { order: 1; padding: 2rem 1rem; }
+  .auth-right { order: 2; min-height: 200px; padding: 1rem; }
+  .auth-hero { background: rgba(0,0,0,0.8); padding: 1.5rem; }
+  .hero-title { font-size: 2rem; }
+  .brand-name { font-size: 1.5rem; }
+  .cta-button { width: 100%; }
+  .threejs-background { opacity: .8; }
 }
-
 @media (max-width: 480px) {
-  .auth-left,
-  .auth-right {
-    padding: 1rem;
-  }
-
-  .auth-hero {
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.9); /* Even more opaque on small screens */
-  }
-
-  .hero-title {
-    font-size: 1.75rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-
-  .brand-name {
-    font-size: 1.25rem;
-  }
-
-  .threejs-background {
-    opacity: 0.6; /* Reduce background intensity on very small screens */
-  }
+  .auth-left, .auth-right { padding: 1rem; }
+  .auth-hero { padding: 1rem; background: rgba(0,0,0,0.9); }
+  .hero-title { font-size: 1.75rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .brand-name { font-size: 1.25rem; }
+  .threejs-background { opacity: .6; }
 }
 
 /* Loading state for Three.js */
 .threejs-background:empty::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(99, 102, 241, 0.3);
+  width: 40px; height: 40px;
+  border: 3px solid rgba(99,102,241,0.3);
   border-top: 3px solid #6366f1;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+@keyframes spin { 0%{ transform: translate(-50%, -50%) rotate(0deg); } 100%{ transform: translate(-50%, -50%) rotate(360deg); } }
 
-@keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
+/* 🔧 DO NOT create new stacking contexts globally. Remove the old rule:
+   * { backface-visibility:hidden; transform:translate3d(0,0,0); }
+   If you really need it for a specific element, scope it narrowly:
+   .feature-item { backface-visibility:hidden; transform: translateZ(0); }
+*/
 
-/* Ensure smooth animations */
-* {
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
+/* ✅ Ensure Clerk modal is on top */
+.cl-modal,
+.cl-backdrop,
+.cl-card,
+.cl-rootBox {
+  z-index: 10010 !important;
 }
