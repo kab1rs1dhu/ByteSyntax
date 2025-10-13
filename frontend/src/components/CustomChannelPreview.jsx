@@ -6,10 +6,7 @@ const CustomChannelPreview = ({ channel, setActiveChannel, activeChannel }) => {
 
   if (isDM) return null;
 
-  const unreadCount = channel.countUnread();
   const channelLabel = channel?.data?.name || channel?.data?.id || "Channel";
-  const memberCount = channel?.data?.member_count;
-  const subtitle = channel?.data?.description || (memberCount ? `${memberCount} member${memberCount === 1 ? "" : "s"}` : null);
 
   const buttonClassName = [
     "str-chat__channel-preview-messenger",
@@ -31,14 +28,7 @@ const CustomChannelPreview = ({ channel, setActiveChannel, activeChannel }) => {
 
       <div className="channel-preview__info">
         <span className="channel-preview__name">{channelLabel}</span>
-        {subtitle && <span className="channel-preview__subtext">{subtitle}</span>}
       </div>
-
-      {unreadCount > 0 && (
-        <span className="channel-preview__badge" aria-label={`${unreadCount} unread messages`}>
-          {unreadCount}
-        </span>
-      )}
     </button>
   );
 };

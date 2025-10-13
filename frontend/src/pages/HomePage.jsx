@@ -20,7 +20,6 @@ import CreateChannelModal from "../components/CreateChannelModal";
 import CustomChannelPreview from "../components/CustomChannelPreview";
 import UsersList from "../components/UsersList";
 import CustomChannelHeader from "../components/CustomChannelHeader";
-import ThreeBackground from "../components/ThreeBackground";
 
 const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -82,9 +81,6 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* Three.js Background Animation */}
-      <ThreeBackground />
-
       <Chat client={chatClient}>
         {/* Desktop Layout */}
         <div className="desktop-layout">
@@ -146,7 +142,6 @@ const HomePage = () => {
 
           {/* Main Chat Area */}
           <div className="main-chat">
-            <ThreeBackground className="threejs-background--chat" />
             <div className="main-chat__content">
               {activeChannel ? (
                 <Channel channel={activeChannel}>
@@ -219,7 +214,6 @@ const HomePage = () => {
             ) : (
               // Chat Screen
               <div className="chat-screen">
-                <ThreeBackground className="threejs-background--chat" />
                 <div className="chat-screen__content">
                   {activeChannel ? (
                     <Channel channel={activeChannel}>

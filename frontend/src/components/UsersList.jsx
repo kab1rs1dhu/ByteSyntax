@@ -72,12 +72,9 @@ const UsersList = ({ activeChannel }) => {
         const channel = client.channel("messaging", channelId, {
           members: [client.user.id, user.id],
         });
-        const unreadCount = channel.countUnread();
         const isActive = activeChannel && activeChannel.id === channelId;
 
         const displayName = (user.name || user.id || "Unknown User").toString();
-        const secondaryText =
-          user.id && user.id !== displayName ? `@${user.id}` : user.online ? "Online" : "Offline";
         const buttonClassName = [
           "str-chat__channel-preview-messenger",
           "channel-preview",
@@ -115,16 +112,13 @@ const UsersList = ({ activeChannel }) => {
 
             <div className="channel-preview__info">
               <span className="channel-preview__name">{displayName}</span>
-              {secondaryText && (
-                <span className="channel-preview__subtext">{secondaryText}</span>
-              )}
-            </div>
-
-            {unreadCount > 0 && (
-              <span className="channel-preview__badge" aria-label={`${unreadCount} unread messages`}>
-                {unreadCount}
+              <span
+                className="channel-preview__presence"
+                aria-label={user.online ? "Online" : "Offline"}
+              >
+                {user.online ? "Online" : "Offline"}
               </span>
-            )}
+            </div>
           </button>
         );
       })}
