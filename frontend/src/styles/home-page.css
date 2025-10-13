@@ -27,6 +27,23 @@
     pointer-events: none;
 }
 
+.threejs-background--chat {
+    position: absolute !important;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.threejs-background--chat canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
 /* Desktop Layout */
 .desktop-layout {
     display: none;
@@ -203,6 +220,36 @@
     backdrop-filter: blur(5px);
     position: relative;
     z-index: 15;
+    overflow: hidden;
+}
+
+.main-chat__content {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-chat__content .str-chat__message-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-chat__content .str-chat__message-list-main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.main-chat__content .str-chat__message-list-scroll {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow-y: auto;
 }
 
 /* Welcome Screen */
@@ -371,6 +418,37 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.chat-screen__content {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-screen__content .str-chat__message-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-screen__content .str-chat__message-list-main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.chat-screen__content .str-chat__message-list-scroll {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow-y: auto;
 }
 
 /* Bottom Navigation */
@@ -458,12 +536,59 @@ Stream Chat Overrides
 
 .str-chat__message-list {
     background: transparent !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.str-chat__main-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.str-chat__main-panel-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.str-chat__message-list-main-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.str-chat__message-list-main-panel > .str-chat__message-list-scroll {
+    flex: 1;
+}
+
+.str-chat__message-list-scroll {
+    height: 100%;
+    flex: 1;
+}
+
+.str-chat__message-list-scroll .str-chat__ul {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.str-chat__message-list .str-chat__empty-channel {
+    margin-top: auto;
+}
+
+.str-chat__message-list .str-chat__empty-channel,
+.str-chat__message-list .str-chat__initial-message {
+    align-self: stretch;
 }
 
 .str-chat__message-input {
     background: rgba(0, 0, 0, 0.4) !important;
     backdrop-filter: blur(10px) !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    
 }
 
 .team-channel-list__users {
