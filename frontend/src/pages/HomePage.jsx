@@ -14,7 +14,7 @@ import {
   Window,
 } from "stream-chat-react";
 
-
+import "../styles/stream-chat-theme.css";
 import { HashIcon, PlusIcon, UsersIcon } from "lucide-react";
 import CreateChannelModal from "../components/CreateChannelModal";
 import CustomChannelPreview from "../components/CustomChannelPreview";
@@ -54,7 +54,7 @@ const HomePage = () => {
               <div className="team-channel-list__header gap-4">
                 <div className="brand-container">
                   <img src="/logo.png" alt="Logo" className="brand-logo" />
-                  <span className="brand-name">Byte Syntax</span>
+                  <span className="brand-name"> Byte Syntax</span>
                 </div>
                 <div className="user-button-wrapper">
                   <UserButton />
