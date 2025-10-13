@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router";
 import { useChatContext } from "stream-chat-react";
 
 import * as Sentry from "@sentry/react";
-import { CircleIcon } from "lucide-react";
 
 const UsersList = ({ activeChannel }) => {
   const { client } = useChatContext();
@@ -76,45 +75,56 @@ const UsersList = ({ activeChannel }) => {
         const unreadCount = channel.countUnread();
         const isActive = activeChannel && activeChannel.id === channelId;
 
+        const displayName = (user.name || user.id || "Unknown User").toString();
+        const secondaryText =
+          user.id && user.id !== displayName ? `@${user.id}` : user.online ? "Online" : "Offline";
+        const buttonClassName = [
+          "str-chat__channel-preview-messenger",
+          "channel-preview",
+          isActive ? "channel-preview--active" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+
         return (
           <button
             key={user.id}
+            type="button"
             onClick={() => startDirectMessage(user)}
-            className={`str-chat__channel-preview-messenger  ${isActive && "!bg-black/20 !hover:bg-black/20 border-l-8 border-purple-500 shadow-lg0"
-              }`}
+            className={buttonClassName}
           >
-            <div className="flex items-center gap-2 w-full">
-              <div className="relative">
-                {user.image ? (
-                  <img
-                    src={user.image}
-                    alt={user.name || user.id}
-                    className="w-4 h-4 rounded-full"
-                  />
-                ) : (
-                  <div className="w-4 h-4 rounded-full bg-gray-400 flex items-center justify-center">
-                    <span className="text-xs text-white">
-                      {(user.name || user.id).charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-
-                <CircleIcon
-                  className={`w-2 h-2 absolute -bottom-0.5 -right-0.5 ${user.online ? "text-green-500 fill-green-500" : "text-gray-400 fill-gray-400"
-                    }`}
+            <div className="channel-preview__avatar">
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt={user.name || user.id}
+                  className="channel-preview__avatar-img"
                 />
-              </div>
-
-              <span className="str-chat__channel-preview-messenger-name truncate">
-                {user.name || user.id}
-              </span>
-
-              {unreadCount > 0 && (
-                <span className="flex items-center justify-center ml-2 size-4 text-xs rounded-full bg-red-500 ">
-                  {unreadCount}
+              ) : (
+                <span className="channel-preview__avatar-fallback">
+                  {displayName.charAt(0).toUpperCase()}
                 </span>
               )}
+              <span
+                className={`channel-preview__status ${user.online
+                  ? "channel-preview__status--online"
+                  : "channel-preview__status--offline"
+                  }`}
+              />
             </div>
+
+            <div className="channel-preview__info">
+              <span className="channel-preview__name">{displayName}</span>
+              {secondaryText && (
+                <span className="channel-preview__subtext">{secondaryText}</span>
+              )}
+            </div>
+
+            {unreadCount > 0 && (
+              <span className="channel-preview__badge" aria-label={`${unreadCount} unread messages`}>
+                {unreadCount}
+              </span>
+            )}
           </button>
         );
       })}
