@@ -15,7 +15,7 @@ import {
 } from "stream-chat-react";
 
 import "../styles/stream-chat-theme.css";
-import { HashIcon, PlusIcon, UsersIcon } from "lucide-react";
+import { HashIcon, MessageSquareIcon, PlusIcon, UsersIcon } from "lucide-react";
 import CreateChannelModal from "../components/CreateChannelModal";
 import CustomChannelPreview from "../components/CustomChannelPreview";
 import UsersList from "../components/UsersList";
@@ -24,6 +24,7 @@ import CustomChannelHeader from "../components/CustomChannelHeader";
 const HomePage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [activeChannel, setActiveChannel] = useState(null);
+  const [activeMobileTab, setActiveMobileTab] = useState("messages");
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { chatClient, error, isLoading } = useStreamChat();
@@ -39,6 +40,21 @@ const HomePage = () => {
     }
   }, [chatClient, searchParams]);
 
+  const handleChannelSelect = (channel) => {
+    if (!channel) return;
+
+    setActiveChannel(channel);
+    setSearchParams({ channel: channel.id });
+
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches) {
+      setActiveMobileTab("messages");
+    }
+  };
+
+  const handleMobileTabChange = (tab) => {
+    setActiveMobileTab(tab);
+  };
+
   // todo: handle this with a better component
   if (error) return <p>Something went wrong...</p>;
   if (isLoading || !chatClient) return <PageLoader />;
@@ -46,7 +62,7 @@ const HomePage = () => {
   return (
     <div className="chat-wrapper">
       <Chat client={chatClient}>
-        <div className="chat-container">
+        <div className={`chat-container mobile-tab-${activeMobileTab}`}>
           {/* LEFT SIDEBAR */}
           <div className="str-chat__channel-list">
             <div className="team-channel-list">
@@ -77,7 +93,7 @@ const HomePage = () => {
                     <CustomChannelPreview
                       channel={channel}
                       activeChannel={activeChannel}
-                      setActiveChannel={(channel) => setSearchParams({ channel: channel.id })}
+                      setActiveChannel={handleChannelSelect}
                     />
                   )}
                   List={({ children, loading, error }) => (
@@ -101,7 +117,7 @@ const HomePage = () => {
                           <span>Direct Messages</span>
                         </div>
                       </div>
-                      <UsersList activeChannel={activeChannel} />
+                      <UsersList activeChannel={activeChannel} onSelectChannel={handleChannelSelect} />
                     </div>
                   )}
                 />
@@ -122,6 +138,29 @@ const HomePage = () => {
             </Channel>
           </div>
         </div>
+
+        <nav className="mobile-bottom-nav" aria-label="Primary navigation">
+          <button
+            type="button"
+            onClick={() => handleMobileTabChange("channels")}
+            className={`mobile-bottom-nav__item ${
+              activeMobileTab === "channels" ? "mobile-bottom-nav__item--active" : ""
+            }`}
+          >
+            <HashIcon className="size-5" />
+            <span>Channels</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleMobileTabChange("messages")}
+            className={`mobile-bottom-nav__item ${
+              activeMobileTab === "messages" ? "mobile-bottom-nav__item--active" : ""
+            }`}
+          >
+            <MessageSquareIcon className="size-5" />
+            <span>Messages</span>
+          </button>
+        </nav>
 
         {isCreateModalOpen && <CreateChannelModal onClose={() => setIsCreateModalOpen(false)} />}
       </Chat>

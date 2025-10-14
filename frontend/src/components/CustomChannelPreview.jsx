@@ -11,12 +11,10 @@ const CustomChannelPreview = ({ channel, setActiveChannel, activeChannel }) => {
     return (
         <button
             onClick={() => setActiveChannel(channel)}
-            className={`str-chat__channel-preview-messenger transition-colors flex items-center w-full text-left px-4 py-2 rounded-lg mb-1 font-medium hover:bg-blue-50/80 min-h-9 ${isActive
-                    ? "!bg-black/20 !hover:bg-black/20 border-l-8 border-purple-500 shadow-lg text-blue-900"
-                    : ""
+            className={`str-chat__channel-preview-messenger transition-colors flex items-center w-full text-left px-4 py-2 rounded-lg mb-1 font-medium min-h-9 ${isActive ? "str-chat__channel-preview-messenger--active" : ""
                 }`}
         >
-            <HashIcon className="w-4 h-4 text-[#9b9b9b] mr-2" />
+            <HashIcon className="w-4 h-4 text-slate-300 mr-2" />
             <span className="str-chat__channel-preview-messenger-name flex-1">{channel.data.id}</span>
 
             {unreadCount > 0 && (

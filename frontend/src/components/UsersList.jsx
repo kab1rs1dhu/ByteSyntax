@@ -6,7 +6,7 @@ import { useChatContext } from "stream-chat-react";
 import * as Sentry from "@sentry/react";
 import { CircleIcon } from "lucide-react";
 
-const UsersList = ({ activeChannel }) => {
+const UsersList = ({ activeChannel, onSelectChannel }) => {
   const { client } = useChatContext();
   const [_, setSearchParams] = useSearchParams();
 
@@ -50,6 +50,7 @@ const UsersList = ({ activeChannel }) => {
       });
       await channel.watch();
       setSearchParams({ channel: channel.id });
+      onSelectChannel?.(channel);
     } catch (error) {
       console.log("Error creating DM", error),
         Sentry.captureException(error, {
@@ -80,7 +81,7 @@ const UsersList = ({ activeChannel }) => {
           <button
             key={user.id}
             onClick={() => startDirectMessage(user)}
-            className={`str-chat__channel-preview-messenger  ${isActive && "!bg-black/20 !hover:bg-black/20 border-l-8 border-purple-500 shadow-lg0"
+            className={`str-chat__channel-preview-messenger transition-colors flex items-center w-full text-left px-4 py-2 rounded-lg mb-1 font-medium min-h-9 ${isActive ? "str-chat__channel-preview-messenger--active" : ""
               }`}
           >
             <div className="flex items-center gap-2 w-full">
@@ -89,10 +90,10 @@ const UsersList = ({ activeChannel }) => {
                   <img
                     src={user.image}
                     alt={user.name || user.id}
-                    className="w-4 h-4 rounded-full"
+                    className="w-4 h-4 rounded-full border border-slate-600/60"
                   />
                 ) : (
-                  <div className="w-4 h-4 rounded-full bg-gray-400 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full bg-slate-600 flex items-center justify-center">
                     <span className="text-xs text-white">
                       {(user.name || user.id).charAt(0).toUpperCase()}
                     </span>
@@ -100,17 +101,17 @@ const UsersList = ({ activeChannel }) => {
                 )}
 
                 <CircleIcon
-                  className={`w-2 h-2 absolute -bottom-0.5 -right-0.5 ${user.online ? "text-green-500 fill-green-500" : "text-gray-400 fill-gray-400"
+                  className={`w-2 h-2 absolute -bottom-0.5 -right-0.5 ${user.online ? "text-green-500 fill-green-500" : "text-slate-500 fill-slate-500"
                     }`}
                 />
               </div>
 
-              <span className="str-chat__channel-preview-messenger-name truncate">
+              <span className="str-chat__channel-preview-messenger-name truncate text-slate-200">
                 {user.name || user.id}
               </span>
 
               {unreadCount > 0 && (
-                <span className="flex items-center justify-center ml-2 size-4 text-xs rounded-full bg-red-500 ">
+                <span className="flex items-center justify-center ml-2 size-4 text-xs rounded-full bg-blue-500 text-white">
                   {unreadCount}
                 </span>
               )}
