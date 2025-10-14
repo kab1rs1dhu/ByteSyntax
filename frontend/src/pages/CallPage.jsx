@@ -17,7 +17,6 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 
-import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 

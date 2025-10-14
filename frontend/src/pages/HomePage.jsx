@@ -126,7 +126,7 @@ const HomePage = () => {
           </div>
 
           {/* RIGHT CONTAINER */}
-          <div className="chat-main">
+          <div className="chat-main ">
             <Channel channel={activeChannel}>
               <Window>
                 <CustomChannelHeader />
