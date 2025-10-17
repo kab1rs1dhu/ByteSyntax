@@ -1044,34 +1044,40 @@
   color: rgba(226, 232, 240, 0.85);
 }
 
-/* LIGHT BLUE MESSAGE BACKGROUND - NO HOVER EFFECT */
+/* SUBTLE GRADIENT BLUE MESSAGE BACKGROUND */
 .chat-main [class*="message-simple__content"],
 .chat-main .str-chat__message-simple-text-inner {
-  background: #dbeafe !important;
-  border: none !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(29, 78, 216, 0.25) 100%) !important;
+  border: 0.5px solid rgba(59, 130, 246, 0.2) !important;
   color: #ffffff !important;
-  border-radius: 0 !important;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+  padding: 8px 12px !important;
+  backdrop-filter: blur(10px);
 }
 
 .chat-main [class*="message-simple--me"] [class*="message-simple__content"] {
-  background: #bfdbfe !important;
-  border: none !important;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.2) 0%, rgba(30, 64, 175, 0.3) 100%) !important;
+  border: 0.5px solid rgba(29, 78, 216, 0.25) !important;
   color: #ffffff !important;
-  border-radius: 0 !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  backdrop-filter: blur(10px);
 }
 
-/* REMOVE HOVER EFFECT */
+/* SUBTLE HOVER EFFECT */
 .chat-main [class*="message-simple__content"]:hover,
 .chat-main .str-chat__message-simple-text-inner:hover,
 .chat-main [class*="message-simple--me"] [class*="message-simple__content"]:hover {
-  background: #dbeafe !important;
-  transform: none !important;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(29, 78, 216, 0.35) 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.2) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
 }
 
 .chat-main [class*="message-simple--me"] [class*="message-simple__content"]:hover {
-  background: #bfdbfe !important;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.3) 0%, rgba(30, 64, 175, 0.4) 100%) !important;
+  border-color: rgba(29, 78, 216, 0.35) !important;
 }
 
 /* 3-dots button itself (make it white) */
