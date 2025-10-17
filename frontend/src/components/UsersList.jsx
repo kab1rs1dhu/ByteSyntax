@@ -1,27 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { useChatContext } from "stream-chat-react";
-
+import { CircleIcon, MessageSquareIcon } from "lucide-react";
 import * as Sentry from "@sentry/react";
-import { CircleIcon } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const UsersList = ({ activeChannel, onSelectChannel }) => {
   const { client } = useChatContext();
-  const [_, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const fetchUsers = useCallback(async () => {
-    if (!client?.user) return;
-
+    if (!client?.user) return [];
     const response = await client.queryUsers(
       { id: { $ne: client.user.id } },
       { name: 1 },
-      { limit: 20 }
+      { limit: 40 }
     );
-
-    const usersOnly = response.users.filter((user) => !user.id.startsWith("recording-"));
-
-    return usersOnly;
+    return response.users.filter((user) => !user.id.startsWith("recording-"));
   }, [client]);
 
   const {
@@ -32,18 +30,12 @@ const UsersList = ({ activeChannel, onSelectChannel }) => {
     queryKey: ["users-list", client?.user?.id],
     queryFn: fetchUsers,
     enabled: !!client?.user,
-    staleTime: 1000 * 60 * 5, // 5 mins
+    staleTime: 1000 * 60 * 5,
   });
-
-  // staleTime
-  // what it does: tells React Query the data is "fresh" for 5 minutes
-  // behavior: during these 5 minutes, React Query WON'T refetch the data automatically
 
   const startDirectMessage = async (targetUser) => {
     if (!targetUser || !client?.user) return;
-
     try {
-      //  bc stream does not allow channelId to be longer than 64 chars
       const channelId = [client.user.id, targetUser.id].sort().join("-").slice(0, 64);
       const channel = client.channel("messaging", channelId, {
         members: [client.user.id, targetUser.id],
@@ -52,23 +44,41 @@ const UsersList = ({ activeChannel, onSelectChannel }) => {
       setSearchParams({ channel: channel.id });
       onSelectChannel?.(channel);
     } catch (error) {
-      console.log("Error creating DM", error),
-        Sentry.captureException(error, {
-          tags: { component: "UsersList" },
-          extra: {
-            context: "create_direct_message",
-            targetUserId: targetUser?.id,
-          },
-        });
+      Sentry.captureException(error, {
+        tags: { component: "UsersList" },
+        extra: { targetUserId: targetUser?.id },
+      });
     }
   };
 
-  if (isLoading) return <div className="team-channel-list__message">Loading users...</div>;
-  if (isError) return <div className="team-channel-list__message">Failed to load users</div>;
-  if (!users.length) return <div className="team-channel-list__message">No other users found</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-muted/10 px-3 py-2 text-sm text-muted-foreground">
+        <MessageSquareIcon className="size-4 animate-pulse" />
+        Loading teammates…
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        Failed to load teammates
+      </div>
+    );
+  }
+
+  if (!users.length) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-border/60 bg-muted/10 px-4 py-6 text-sm text-muted-foreground">
+        <MessageSquareIcon className="size-5" />
+        <span>No teammates available yet.</span>
+      </div>
+    );
+  }
 
   return (
-    <div className="team-channel-list__users">
+    <div className="space-y-2">
       {users.map((user) => {
         const channelId = [client.user.id, user.id].sort().join("-").slice(0, 64);
         const channel = client.channel("messaging", channelId, {
@@ -81,41 +91,40 @@ const UsersList = ({ activeChannel, onSelectChannel }) => {
           <button
             key={user.id}
             onClick={() => startDirectMessage(user)}
-            className={`str-chat__channel-preview-messenger transition-colors flex items-center w-full text-left px-4 py-2 rounded-lg mb-1 font-medium min-h-9 ${isActive ? "str-chat__channel-preview-messenger--active" : ""
-              }`}
+            className={cn(
+              "flex w-full items-center justify-between rounded-2xl border border-transparent bg-muted/10 px-3 py-2 text-left transition-all hover:border-primary/40 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 md:px-4 md:py-3",
+              isActive && "border-primary/60 bg-primary/10 shadow-lg shadow-primary/10"
+            )}
           >
-            <div className="flex items-center gap-2 w-full">
+            <div className="flex items-center gap-3">
               <div className="relative">
                 {user.image ? (
                   <img
                     src={user.image}
                     alt={user.name || user.id}
-                    className="w-4 h-4 rounded-full border border-slate-600/60"
+                    className="size-9 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-4 h-4 rounded-full bg-slate-600 flex items-center justify-center">
-                    <span className="text-xs text-white">
-                      {(user.name || user.id).charAt(0).toUpperCase()}
-                    </span>
-                  </div>
+                  <span className="flex size-9 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold uppercase text-primary">
+                    {(user.name || user.id).charAt(0)}
+                  </span>
                 )}
-
                 <CircleIcon
-                  className={`w-2 h-2 absolute -bottom-0.5 -right-0.5 ${user.online ? "text-green-500 fill-green-500" : "text-slate-500 fill-slate-500"
-                    }`}
+                  className={cn(
+                    "absolute -bottom-0.5 -right-0.5 size-3 rounded-full",
+                    user.online ? "text-green-500" : "text-muted-foreground/60"
+                  )}
                 />
               </div>
-
-              <span className="str-chat__channel-preview-messenger-name truncate text-slate-200">
-                {user.name || user.id}
-              </span>
-
-              {unreadCount > 0 && (
-                <span className="flex items-center justify-center ml-2 size-4 text-xs rounded-full bg-blue-500 text-white">
-                  {unreadCount}
-                </span>
-              )}
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-foreground">{user.name || user.id}</span>
+                <span className="text-xs text-muted-foreground">Direct message</span>
+              </div>
             </div>
+
+            {unreadCount > 0 ? (
+              <Badge className="bg-primary text-primary-foreground">{unreadCount}</Badge>
+            ) : null}
           </button>
         );
       })}

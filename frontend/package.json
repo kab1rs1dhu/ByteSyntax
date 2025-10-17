@@ -11,11 +11,15 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.37.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-scroll-area": "^1.0.6",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
     "@sentry/react": "^10.1.0",
     "@stream-io/video-react-sdk": "^1.19.2",
-    "@tailwindcss/vite": "^4.1.14",
     "@tanstack/react-query": "^5.83.0",
     "axios": "^1.11.0",
+    "class-variance-authority": "^0.7.1",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -23,7 +27,8 @@
     "react-router": "^7.6.3",
     "stream-chat": "^9.14.0",
     "stream-chat-react": "^13.3.0",
-    "tailwindcss": "^4.1.14",
+    "tailwindcss": "^3.4.15",
+    "tailwindcss-animate": "^1.0.7",
     "three": "^0.180.0"
   },
   "devDependencies": {
@@ -35,6 +40,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "autoprefixer": "^10.4.20"
   }
 }
