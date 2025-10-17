@@ -56,7 +56,7 @@ const CustomChannelHeader = () => {
             />
           )}
 
-          <span className="font-medium text-[#1D1C1D]">
+          <span className="font-medium text-white">
             {isDM ? otherUser?.user?.name || otherUser?.user?.id : channel.data?.id}
           </span>
         </div>

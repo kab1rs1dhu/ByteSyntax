@@ -130,7 +130,10 @@ const HomePage = () => {
             <Channel channel={activeChannel}>
               <Window>
                 <CustomChannelHeader />
-                <MessageList />
+                <MessageList 
+                  disableReactions={true}
+                  messageActions={['edit', 'delete', 'quote', 'pin']}
+                />
                 <MessageInput />
               </Window>
 

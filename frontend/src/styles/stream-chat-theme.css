@@ -582,17 +582,17 @@
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  background: linear-gradient(135deg, #0b1220 0%, #1f2937 50%, #0f172a 100%);
-  color: rgba(248, 250, 252, 0.95);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
   font-weight: 700;
   font-size: 0.9rem;
   padding: 1rem 1.25rem;
   border-radius: 1rem;
-  border: 1px solid rgba(59, 130, 246, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.6);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.5), 0 4px 15px rgba(59, 130, 246, 0.35),
-    inset 0 2px 0 rgba(255, 255, 255, 0.1), inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
@@ -615,10 +615,11 @@
 }
 
 .create-channel-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.55), 0 6px 20px rgba(59, 130, 246, 0.45),
-    inset 0 2px 0 rgba(255, 255, 255, 0.14), inset 0 -2px 0 rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(59, 130, 246, 0.55);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(59, 130, 246, 0.8);
 }
 
 .create-channel-btn:active {
@@ -1234,19 +1235,19 @@
   box-shadow: none !important;
 }
 
-/* Plus button (attachment button) - BLUE background */
+/* Plus button (attachment button) - BLUE GRADIENT */
 .chat-main .str-chat__message-input .str-chat__fileupload-wrapper button,
 .chat-main .str-chat__message-input [class*="fileupload"] button,
 .chat-main .str-chat__message-input .str-chat__input-fileupload,
 .chat-main .str-chat__message-input button[aria-label*="Attach"],
 .chat-main .str-chat__message-input button[aria-label*="attach"] {
-  background: #3b82f6 !important;
-  border: none !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: 1px solid rgba(59, 130, 246, 0.6) !important;
   color: #ffffff !important;
   border-radius: 8px !important;
   padding: 8px !important;
   transition: all 0.2s ease !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
 }
 
 .chat-main .str-chat__message-input .str-chat__fileupload-wrapper button svg,
@@ -1257,18 +1258,18 @@
   color: #ffffff !important;
 }
 
-/* Send button - BLUE background */
+/* Send button - BLUE GRADIENT */
 .chat-main .str-chat__send-button,
 .chat-main .str-chat__message-input [class*="send-button"],
 .chat-main .str-chat__message-input button[aria-label*="Send"],
 .chat-main .str-chat__message-input button[type="submit"] {
-  background: #3b82f6 !important;
-  border: none !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: 1px solid rgba(59, 130, 246, 0.6) !important;
   color: #ffffff !important;
   border-radius: 8px !important;
   padding: 8px !important;
   transition: all 0.2s ease !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
 }
 
 .chat-main .str-chat__send-button svg,
@@ -1282,9 +1283,9 @@
 .chat-main .str-chat__message-input .str-chat__message-input-button:hover,
 .chat-main .str-chat__message-input [class*="send-button"]:hover,
 .chat-main .str-chat__message-input [class*="icon-button"]:hover {
-  background: #2563eb !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
 }
 
 /* Plus button hover */
@@ -1293,9 +1294,9 @@
 .chat-main .str-chat__message-input .str-chat__input-fileupload:hover,
 .chat-main .str-chat__message-input button[aria-label*="Attach"]:hover,
 .chat-main .str-chat__message-input button[aria-label*="attach"]:hover {
-  background: #2563eb !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
 }
 
 /* Send button hover */
@@ -1586,4 +1587,32 @@
 
 .str-chat__main-panel::-webkit-scrollbar-thumb:hover {
     background: #2a2a2a;
+}
+
+/* Hide specific reaction/emoji related elements */
+.str-chat__message-reactions,
+.str-chat__message-reactions-list,
+.str-chat__message-reaction-selector,
+.str-chat__emoji-picker,
+.str-chat__reaction-selector,
+.message-reactions,
+.message-reactions-picker {
+    display: none !important;
+}
+
+/* Hide reaction buttons in message actions */
+.str-chat__message-actions button[data-testid*="reaction"],
+.str-chat__message-actions button[title*="reaction"],
+.str-chat__message-actions button[title*="emoji"],
+.str-chat__message-actions .str-chat__message-actions-box-button[aria-label*="React"] {
+    display: none !important;
+}
+
+/* Ensure message input is visible */
+.str-chat__message-input,
+.str-chat__message-input-wrapper,
+.str-chat__message-textarea,
+.str-chat__input {
+    display: block !important;
+    visibility: visible !important;
 }
