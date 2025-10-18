@@ -8,6 +8,7 @@ Byte Syntax is a full-stack collaboration platform that combines real‑time cha
 - **Authentication & user management** through Clerk (OAuth/social login ready).
 - **Interactive auth experience** featuring a Three.js particle background, responsive marketing hero, and consistent typography system.
 - **Video & call support** via Stream's video SDK.
+- **Installable PWA experience** with offline-first caching and manifest metadata.
 - **Notifications & automations** scaffolded with Inngest and instrumented with Sentry for monitoring.
 - **Shared design system** using custom CSS, Tailwind tooling, and consistent typography.
 
@@ -136,6 +137,13 @@ CLIENT_URL=http://localhost:5173
 - **Stream** dashboard surfaces channel usage and rate limits.
 - **Clerk** dashboard manages users, sessions, and OAuth connections.
 - **Inngest** observability tools help debug background jobs and webhooks.
+
+## Progressive Web App
+
+- The frontend ships with a `manifest.webmanifest` and a lightweight service worker (`public/service-worker.js`) that precaches core assets.
+- When served over HTTPS (or `http://localhost` for dev), browsers will prompt users to **Install Byte Syntax** from the address bar or menu.
+- The app supports standalone display mode, custom theme color, and cached assets for limited offline access.
+- To customize icons, replace `/public/logo.png` and `/public/logo-name.png` with 192×192 and 512×512 variants and update the manifest accordingly.
 
 ## Project Metrics
 

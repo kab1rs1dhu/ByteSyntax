@@ -1537,22 +1537,22 @@
 @media (max-width: 640px) {
   .chat-wrapper {
     padding: 0;
-    padding-bottom: 4.5rem;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .chat-container {
-    height: calc(100vh - 5.5rem);
+    height: calc(100vh - 5.5rem - env(safe-area-inset-bottom, 0px));
     flex-direction: column;
     border-radius: 0;
   }
 
   .str-chat__channel-list {
     width: 100%;
-    height: calc(100vh - 5.5rem);
+    height: calc(100vh - 5.5rem - env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     border-right: none;
     border-bottom: none;
-    padding-bottom: 4.5rem;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .chat-container.mobile-tab-channels .chat-main {
@@ -1575,14 +1575,27 @@
   .chat-main {
     border-radius: 0;
     flex: 1;
-    height: calc(100vh - 5.5rem);
+    height: calc(100vh - 5.5rem - env(safe-area-inset-bottom, 0px));
     overflow: hidden;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .mobile-bottom-nav {
     display: flex;
     width: min(360px, calc(100% - 1.5rem));
     justify-content: space-between;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .chat-main .str-chat__message-list,
+  .chat-main .str-chat__message-list-scroll,
+  .chat-main .str-chat__message-list-virtual-list,
+  .chat-main .str-chat__virtual-list__container {
+    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .chat-main .str-chat__message-input {
+    margin-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
