@@ -96,7 +96,7 @@
 }
 
 .brand-name {
-  font-size: clamp(6rem, 14vw, 14rem);
+  font-size: clamp(8rem, 18vw, 18rem); /* Increased from 6rem, 14vw, 14rem */
   font-weight: 900;
   font-family: inherit;
   letter-spacing: 0.12em;
@@ -109,7 +109,7 @@
 
 .hero-title {
   font-size: clamp(1.75rem, 3vw, 2.35rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
   margin-bottom: 1rem;
   background: linear-gradient(45deg, #fff, #e0e0e0);
@@ -433,7 +433,7 @@
   }
 
   .brand-name {
-    font-size: 2rem;
+    font-size: clamp(3rem, 12vw, 4rem); /* Larger than before but still responsive */
   }
 
 }
