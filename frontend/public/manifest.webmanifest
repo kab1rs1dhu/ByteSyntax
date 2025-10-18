@@ -1,0 +1,24 @@
+{
+  "name": "Byte Syntax",
+  "short_name": "ByteSyntax",
+  "description": "Collaborate in real time with channels, calls, and tasks built for fast-moving teams.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#040b1c",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-name.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
