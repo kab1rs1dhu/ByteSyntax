@@ -10,7 +10,7 @@ const AuthPage = () => {
         <div className="auth-left">
           <div className="auth-hero">
             <div className="brand-container">
-              <div className="brand-logo" />
+              <img src="/logo.png" alt="Byte Syntax logo" className="brand-logo" />
               <span className="brand-name">Byte Syntax</span>
             </div>
 

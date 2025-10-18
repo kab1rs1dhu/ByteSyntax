@@ -29,9 +29,13 @@
   margin: 0 auto;
   padding: clamp(2rem, 4vw, 4rem);
   display: flex;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   border-radius: 2.5rem;
   overflow: hidden;
-  
+}
+
+.auth-container * {
+  font-family: inherit;
 }
 
 .auth-page::after {
@@ -62,7 +66,7 @@
 }
 
 .auth-hero {
-  max-width: 500px;
+  max-width: 680px;
   color: white;
   z-index: 2;
   padding: 3rem;
@@ -85,13 +89,17 @@
   height: 3.5rem;
   border-radius: 0.75rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  object-fit: contain;
+  background: rgba(15, 23, 42, 0.65);
+  padding: 0.35rem;
+  display: block;
 }
 
 .brand-name {
-  font-size: clamp(3rem, 4.8vw, 3.75rem);
-  font-weight: 800;
-  font-family: "Monaco", monospace;
-  letter-spacing: 0.1em;
+  font-size: clamp(6rem, 14vw, 14rem);
+  font-weight: 900;
+  font-family: inherit;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   background: linear-gradient(45deg, #fff, #f0f0f0);
   -webkit-background-clip: text;
@@ -101,7 +109,7 @@
 
 .hero-title {
   font-size: clamp(1.75rem, 3vw, 2.35rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1rem;
   background: linear-gradient(45deg, #fff, #e0e0e0);
@@ -161,42 +169,50 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: linear-gradient(135deg, #7209b7 0%, #533483 50%, #4a154b 100%);
-  color: white;
+  background: linear-gradient(135deg, #051026 0%, #0f2f7a 52%, #1d4ed8 100%);
+  color: #eaf2ff;
   font-size: 1.125rem;
   font-weight: 600;
   padding: 1.25rem 2.5rem;
   border-radius: 1rem;
-  border: 1px solid rgba(114, 9, 183, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.55);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 20px 40px rgba(74, 21, 75, 0.3), 0 8px 20px rgba(114, 9, 183, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 22px 45px rgba(6, 18, 50, 0.48), 0 12px 28px rgba(37, 99, 235, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(18px);
 }
 
 .cta-button::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: all 0.6s ease;
+  top: -110%;
+  left: -30%;
+  width: 160%;
+  height: 220%;
+  background: conic-gradient(
+    from 120deg,
+    rgba(96, 165, 250, 0.4),
+    transparent 45%,
+    transparent 75%,
+    rgba(147, 197, 253, 0.45)
+  );
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
 }
 
 .cta-button:hover::before {
-  left: 100%;
+  transform: rotate(15deg);
+  opacity: 1;
 }
 
 .cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 25px 60px rgba(74, 21, 75, 0.4), 0 12px 30px rgba(114, 9, 183, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(114, 9, 183, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 36px 80px rgba(4, 12, 36, 0.62), 0 18px 42px rgba(37, 99, 235, 0.34),
+    inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(96, 165, 250, 0.78);
 }
 
 .button-arrow {
@@ -270,17 +286,16 @@
   box-shadow: 0 24px 58px rgba(3, 8, 22, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(15px);
   overflow: hidden;
-  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 
 .feature-card::before {
   content: "";
   position: absolute;
   inset: -25% 15% 55% -25%;
-  background: radial-gradient(circle at 55% 40%, rgba(120, 162, 255, 0.45), transparent 70%);
   opacity: 0;
-  transform: translate3d(0, 10px, 0);
-  transition: opacity 0.32s ease, transform 0.32s ease;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 0.32s ease, transform 0.32s ease, filter 0.32s ease;
   pointer-events: none;
 }
 
@@ -290,7 +305,6 @@
   inset: 18% auto 18% 0;
   width: 4px;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(56, 189, 248, 0.65), rgba(99, 102, 241, 0.35));
   opacity: 0.7;
 }
 
@@ -298,11 +312,13 @@
   transform: translateY(-8px);
   border-color: rgba(129, 140, 255, 0.55);
   box-shadow: 0 32px 70px rgba(2, 7, 20, 0.58);
+  background: rgba(17, 28, 55, 0.7);
 }
 
 .feature-card:hover::before {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+  filter: blur(0);
 }
 
 .feature-card__icon {
