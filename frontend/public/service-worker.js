@@ -4,8 +4,7 @@ const CORE_ASSETS = [
   "/",
   "/index.html",
   "/manifest.webmanifest",
-  "/logo.png",
-  "/logo-name.png"
+  "/logo.png"
 ];
 
 self.addEventListener("install", (event) => {
